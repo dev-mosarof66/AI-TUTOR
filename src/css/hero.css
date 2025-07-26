@@ -1,0 +1,47 @@
+/* From Uiverse.io by Peary74 */ 
+button {
+  font-family: inherit;
+  background: #212121;
+  color: white;
+  fill: rgb(155, 153, 153);
+  padding-left: 0.9em;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  border: none;
+}
+
+button span {
+  display: block;
+  margin-left: 0.3em;
+  transition: all 0.3s ease-in-out;
+}
+
+button svg {
+  display: block;
+  transform-origin: center center;
+  transition: transform 0.3s ease-in-out;
+}
+
+button:hover {
+  background: #000;
+}
+
+button:hover .svg-wrapper {
+  transform: scale(1.3);
+  transition: 0.5s linear;
+}
+
+button:hover .svg {
+  transform: translateX(1.3em) scale(1.2);
+  fill: gold;
+}
+
+button:hover span {
+  opacity: 0;
+  transition: 0.5s linear;
+}
+
+button:active {
+  transform: scale(0.95);
+}
