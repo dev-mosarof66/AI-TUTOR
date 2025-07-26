@@ -1,38 +1,11 @@
 "use client";
-import Sidebar from "@/components/custom/sidebar";
 import React, { useEffect } from "react";
-import { FaStar, FaFire } from "react-icons/fa";
-import { SiBookstack } from "react-icons/si";
-import { MdHome } from "react-icons/md";
 import "../../css/sidebar.css";
-import CourseContent from "@/components/custom/CourseContent";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import { changeTheme } from "@/features/theme/themeSlice";
+import CourseContent from "@/components/custom/CourseContent";
 
-const Items = [
-  {
-    id: 1,
-    name: "Home",
-    Icon: () => <MdHome size={24} />,
-  },
-  {
-    id: 2,
-    name: "Courses",
-    Icon: () => <SiBookstack size={20} />,
-  },
-  {
-    id: 3,
-    name: "Popular",
-    Icon: () => <FaStar size={21} />,
-  },
-  {
-    id: 4,
-    name: "Strike",
-    Icon: () => <FaFire size={20} />,
-  },
-];
-
-const Course = () => {
+const Courses = () => {
   const isDarkMode = useAppSelector((state) => state.theme.theme);
   const dispatch = useAppDispatch();
   console.log("isDarkMode in course", isDarkMode);
@@ -43,16 +16,33 @@ const Course = () => {
   }, []);
   return (
     <div
-      className={`w-full h-screen flex items-center ${
-        !isDarkMode ? "bg-stone-50" : " bg-gray-800"
-      }`}
+      className={`w-[95%] mx-auto  flex flex-col`}
     >
-      <Sidebar items={Items} isDarkMode={isDarkMode} />
-      {/*sidebar placeholder  */}
-      <div className="w-16 sm:w-18" />
+      <div className="w-full max-w-4xl flex flex-col items-center gap-3">
+        <h1
+          className={`text-xl xs:text-3xl sm:text-4xl xs:w-xs text-center ${
+            isDarkMode
+              ? "bg-gradient-to-br from-green-500 to-purple-500 bg-clip-text text-transparent"
+              : "bg-gradient-to-r from-green-500 to-purple-500 bg-clip-text text-transparent"
+          }`}
+        >
+          BECOME A SOFTWARE ENGINEER
+        </h1>
+        <p
+          className={`w-full xs:w-sm text-center text-xs xs:text-base sm:text-lg ${
+            isDarkMode ? "text-gray-500" : "text-gray-500"
+          }`}
+        >
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Error ab
+          praesentium voluptatum ea eos est!
+        </p>
+      </div>
+      {/* divider  */}
+      <div className={`w-full bg-gray-400 h-[1px] my-4`}></div>
+      {/* courses  */}
       <CourseContent />
     </div>
   );
 };
 
-export default Course;
+export default Courses;

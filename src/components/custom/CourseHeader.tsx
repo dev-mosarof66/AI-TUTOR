@@ -19,8 +19,8 @@ const CourseHeader = ({ setSearchMode }: CourseHeaderProps) => {
   };
 
   return (
-    <div className="w-full items-center justify-center">
-      <nav className="w-full flex items-center justify-end gap-5 p-3 sm:p-8">
+    <div className="w-full items-center justify-end">
+      <nav className="w-full flex items-center justify-end gap-5 p-3">
         <div
           onClick={() => setSearchMode(true)}
           className="p-2 bg-purple-500/20 hover:bg-purple-500/30 active:ring active:ring-purple-600 rounded-full cursor-pointer transition duration-500 delay-75"
