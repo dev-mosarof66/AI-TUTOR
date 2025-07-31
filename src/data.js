@@ -282,3 +282,83 @@ const data = [
 ]
 
 export default data
+
+
+
+export const webDevPlaylist = [
+    {
+        title: "Introduction to Web Development",
+        duration: "12:34",
+        link: "https://www.youtube.com/watch?v=3JluqTojuME",
+    },
+    {
+        title: "0HTML Basics – Structure, Tags, and Elements",
+        duration: "18:45",
+        link: "https://www.youtube.com/watch?v=UB1O30fR-EE",
+    },
+    {
+        title: "HTML Forms and Inputs",
+        duration: "15:20",
+        link: "https://www.youtube.com/watch?v=fNcJuPIZ2WE",
+    },
+    {
+        title: "CSS Fundamentals – Styling the Web",
+        duration: "25:10",
+        link: "https://www.youtube.com/watch?v=1PnVor36_40",
+    },
+    {
+        title: "Flexbox & Layouts in CSS",
+        duration: "20:55",
+        link: "https://www.youtube.com/watch?v=fYq5PXgSsbE",
+    },
+    {
+        title: "CSS Grid – Responsive Layouts",
+        duration: "22:45",
+        link: "https://www.youtube.com/watch?v=0xMQfnTU6oo",
+    },
+    {
+        title: "JavaScript Basics – Variables & Functions",
+        duration: "30:01",
+        link: "https://www.youtube.com/watch?v=W6NZfCO5SIk",
+    },
+    {
+        title: "JavaScript DOM Manipulation",
+        duration: "28:33",
+        link: "https://www.youtube.com/watch?v=0ik6X4DJKCc",
+    },
+    {
+        title: "JavaScript Events and Forms",
+        duration: "21:45",
+        link: "https://www.youtube.com/watch?v=XRnGqT8nYHk",
+    },
+    {
+        title: "Git & GitHub Crash Course",
+        duration: "33:30",
+        link: "https://www.youtube.com/watch?v=RGOj5yH7evk",
+    },
+    {
+        title: "Responsive Design & Media Queries",
+        duration: "19:20",
+        link: "https://www.youtube.com/watch?v=srvUrASNj0s",
+    },
+    {
+        title: "JavaScript ES6+ Features",
+        duration: "26:40",
+        link: "https://www.youtube.com/watch?v=NCwa_xi0Uuc",
+    },
+    {
+        title: "Introduction to Bootstrap 5",
+        duration: "35:15",
+        link: "https://www.youtube.com/watch?v=4sosXZsdy-s",
+    },
+    {
+        title: "Deploying Websites with Netlify",
+        duration: "14:22",
+        link: "https://www.youtube.com/watch?v=sGBDL1T9Oq8",
+    },
+    {
+        title: "Final Project: Build a Responsive Portfolio",
+        duration: "58:30",
+        link: "https://www.youtube.com/watch?v=gYzHS-n2gqU",
+    },
+];

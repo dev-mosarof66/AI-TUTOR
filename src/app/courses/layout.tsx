@@ -2,7 +2,6 @@
 import Sidebar from "@/components/custom/sidebar";
 import React, { useEffect, useState } from "react";
 import { FaStar, FaFire } from "react-icons/fa";
-import { SiBookstack } from "react-icons/si";
 import { MdHome } from "react-icons/md";
 import "../../css/sidebar.css";
 import { useAppDispatch, useAppSelector } from "../hooks";
@@ -23,21 +22,15 @@ const Items = [
   },
   {
     id: 2,
-    name: "Courses",
-    Icon: () => <SiBookstack size={20} />,
-    link: "/courses/all",
-  },
-  {
-    id: 3,
     name: "Popular",
     Icon: () => <FaStar size={21} />,
     link: "/courses/popular",
   },
   {
-    id: 4,
-    name: "Strike",
+    id: 3,
+    name: "My Courses",
     Icon: () => <FaFire size={20} />,
-    link: "/courses/strike",
+    link: "/courses/my-courses",
   },
 ];
 
@@ -50,7 +43,7 @@ const CourseLayout = ({ children }: Type) => {
     const load = localStorage.getItem("p_xyz");
     const theme = load ? JSON.parse(load) : null;
     dispatch(changeTheme(theme));
-  }, []);
+  }, [dispatch]);
   return (
     <div
       className={`w-full h-screen flex  ${
@@ -58,10 +51,9 @@ const CourseLayout = ({ children }: Type) => {
       }`}
     >
       <Sidebar items={Items} isDarkMode={isDarkMode} />
-
       <div className="w-[95%] mx-auto sm:w-[90%] h-screen ">
-        <Header setSearchMode={setSearchMode} />
-        <div className="w-full h-[85vh] overflow-y-scroll scrollbar-hidden">
+          <Header setSearchMode={setSearchMode} hideSearch={false} />
+        <div className="w-full h-[88vh] md:h-[86vh] pt-10 md:pt-4 overflow-y-scroll scrollbar-hidden">
           {children}
         </div>
       </div>

@@ -31,8 +31,8 @@ const Sidebar: React.FC<SidebarProps> = ({
 
   useEffect(() => {
     const resizeWindow = () => {
-      if (window.innerWidth < 768) {
-        setIsOpen(false);
+      if (window.innerWidth > 768) {
+        setIsOpen(true);
       }
     };
 

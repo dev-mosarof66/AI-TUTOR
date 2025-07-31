@@ -10,6 +10,7 @@ const roboto = Roboto({
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
 import { ThemeProviderClient } from "@/components/ThemeProviderClient";
 import ThemeProvider from "@/features/ThemeProvider";
+import { Toaster } from "react-hot-toast";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -38,7 +39,11 @@ export default function RootLayout({
       >
         <AppRouterCacheProvider>
           <ThemeProvider>
-            <ThemeProviderClient>{children}</ThemeProviderClient>
+            <ThemeProviderClient>
+              {/* ✅ Add Toaster here */}
+              <Toaster position="top-right" />
+              {children}
+            </ThemeProviderClient>
           </ThemeProvider>
         </AppRouterCacheProvider>
       </body>

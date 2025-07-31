@@ -1,10 +1,12 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
-  images:{
-    domains: ['vividprep.com']
-  }
+  images: {
+    domains: ['res.cloudinary.com'],
+
+  },
+  transpilePackages: ['next-video'],
+
 };
 
 export default nextConfig;

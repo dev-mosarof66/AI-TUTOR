@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Gem, Hourglass, Triangle, PlayCircle } from "lucide-react";
+import { Gem, Triangle, PlayCircle } from "lucide-react";
 import { FaHourglassStart } from "react-icons/fa";
 import { FcStart } from "react-icons/fc";
 
@@ -63,6 +63,7 @@ const Course = ({ params }: { params: { id: string } }) => {
     <div className="w-full min-h-screen bg-gradient-to-br from-[#0f172a] to-[#1e293b] text-white">
       <div className="w-full max-w-5xl mx-auto">
         {/* Header */}
+        <p>{params.id}</p>
         <div className="p-4 xs:p-8 sm:p-10">
           <h1 className="text-2xl sm:text-4xl font-bold text-gray-400 leading-tight">
             The Fullstack Developer Path

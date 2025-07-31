@@ -71,10 +71,10 @@ const Navbar = () => {
               }}
               className="w-[80%] mx-auto flex flex-col gap-3 text-sm xs:text-base"
             >
-              <li className="w-full bg-[#18365593] rounded-md text-center hover:bg-[#183655bd] active:bg-[#183655bd] hover:text-green-700 active:text-green-700 py-1 cursor-pointer transition duration-300 delay-75">
+              <div className="w-full bg-[#18365593] rounded-md text-center hover:bg-[#183655bd] active:bg-[#183655bd] hover:text-green-700 active:text-green-700 py-1 cursor-pointer transition duration-300 delay-75">
                 Home
-              </li>
-              <li
+              </div>
+              <div
                 onClick={() => {
                   router.push("/courses");
                   setShowNavbarContent(false);
@@ -82,13 +82,13 @@ const Navbar = () => {
                 className="w-full bg-[#18365593] rounded-md text-center hover:bg-[#183655bd] active:bg-[#183655bd] hover:text-green-700 active:text-green-700 py-1 cursor-pointer transition duration-300 delay-75"
               >
                 Courses
-              </li>
-              <li className="w-full bg-[#18365593] rounded-md text-center hover:bg-[#183655bd] active:bg-[#183655bd] hover:text-green-700 active:text-green-700 py-1 cursor-pointer transition duration-300 delay-75">
+              </div>
+              <div className="w-full bg-[#18365593] rounded-md text-center hover:bg-[#183655bd] active:bg-[#183655bd] hover:text-green-700 active:text-green-700 py-1 cursor-pointer transition duration-300 delay-75">
                 Pricing
-              </li>
-              <li className="w-full bg-[#18365593] rounded-md text-center hover:bg-[#183655bd] active:bg-[#183655bd] hover:text-green-700 active:text-green-700 py-1 cursor-pointer transition duration-300 delay-75">
+              </div>
+              <div className="w-full bg-[#18365593] rounded-md text-center hover:bg-[#183655bd] active:bg-[#183655bd] hover:text-green-700 active:text-green-700 py-1 cursor-pointer transition duration-300 delay-75">
                 Blogs
-              </li>
+              </div>
               <button className="button w-full px-6 py-1 transition duration-300 delay-75 flex items-center justify-center gap-2 group">
                 <p>Join Now</p>
               </button>
