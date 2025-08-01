@@ -6,6 +6,9 @@ const nextConfig: NextConfig = {
 
   },
   transpilePackages: ['next-video'],
+  serverActions: {
+    bodySizeLimit: '50000mb',
+  },
 
 };
 

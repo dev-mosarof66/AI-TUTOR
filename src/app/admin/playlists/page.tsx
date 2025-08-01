@@ -1,44 +1,19 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import { useAppSelector } from "@/app/hooks";
+import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import AddPlaylist from "@/components/admin/AddPlaylist";
 import PlayList from "@/components/admin/Playlists";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-
-interface ModuleType {
-  title: string;
-  comments: string[];
-  videos: string[];
-}
-
-interface PlaylistType {
-  _id: string;
-  title: string;
-  description: string;
-  thumbnail: string;
-  createdAt: string;
-  updatedAt: string;
-  duration: number | null;
-  level: string | null;
-  modules: ModuleType[];
-  popular: boolean;
-  __v: number;
-}
+import { updatePlaylist } from "@/features/playlist/playlists";
 
 const Playlists = () => {
-  const AllCoursese_Store = useAppSelector(
-    (state) => state.playlists.playlists
-  );
+  const dispatch = useAppDispatch();
+  const playlist = useAppSelector((state) => state.playlists.playlists);
   const [searchTerm, setSearchTerm] = useState("");
-  const [allCourses, setAllCourses] = useState<PlaylistType[]>(
-    AllCoursese_Store || []
-  );
-
-  console.log(allCourses)
 
   const [searchingCourses, setSearchingCourses] = useState(false);
-  console.log(searchTerm);
+  console.log("inside the playlist page");
   const isDarkMode = useAppSelector((state) => state.theme.theme);
 
   useEffect(() => {
@@ -46,8 +21,7 @@ const Playlists = () => {
       setSearchingCourses(true);
       try {
         const res = await axios.get("/api/courses");
-        console.log(res);
-        setAllCourses(res?.data.data);
+        dispatch(updatePlaylist(res?.data.data));
       } catch (error: any) {
         const status = error?.response?.status;
         if (status === 500) {
@@ -57,7 +31,7 @@ const Playlists = () => {
       }
     };
     fetchAllCourses();
-  }, []);
+  }, [dispatch]);
 
   return (
     <div
@@ -68,7 +42,7 @@ const Playlists = () => {
       </div>
 
       <div>
-        <PlayList data={allCourses} loading={searchingCourses} />
+        <PlayList data={playlist} loading={searchingCourses} />
       </div>
     </div>
   );

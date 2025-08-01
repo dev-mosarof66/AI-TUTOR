@@ -4,7 +4,7 @@ import { Button, Tooltip } from "@mui/material";
 import "../../css/sidebar.css";
 import { GoSidebarExpand, GoSidebarCollapse } from "react-icons/go";
 import { LuLogIn } from "react-icons/lu";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 
 interface SidebarItem {
   id: number;
@@ -18,10 +18,12 @@ interface SidebarProps {
   isDarkMode: boolean;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({  items, isDarkMode }) => {
+const Sidebar: React.FC<SidebarProps> = ({ items, isDarkMode }) => {
   const router = useRouter();
+  const pathname = usePathname();
+  console.log(pathname);
   const [isOpen, setIsOpen] = useState(true);
-  const [activeTab, setActiveTab] = useState(1);
+  const [activeTab, setActiveTab] = useState<number>(1);
   const user = false;
 
   useEffect(() => {
@@ -33,9 +35,16 @@ const Sidebar: React.FC<SidebarProps> = ({  items, isDarkMode }) => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-
-  // need to fetch the current path and updata the active tab
-  
+  useEffect(() => {
+    if (!pathname) return;
+    const matched = items.find((i) => {
+      return pathname === i.navigation;
+    });
+    console.log(matched);
+    if (matched) {
+      setActiveTab(matched.id);
+    }
+  }, [pathname, items]);
 
   return (
     <div
@@ -51,7 +60,8 @@ const Sidebar: React.FC<SidebarProps> = ({  items, isDarkMode }) => {
         {/* Sidebar Header */}
         <div className="w-full flex items-center justify-between px-2">
           <div
-            onClick={() => setIsOpen(!isOpen)}
+            onClick={() => setIsOpen((o) => !o)}
+            aria-label={isOpen ? "Collapse sidebar" : "Expand sidebar"}
             className="block xl:hidden p-2 hover:bg-gray-500/20 rounded-full cursor-pointer transition group"
           >
             <Tooltip
@@ -158,6 +168,9 @@ const Sidebar: React.FC<SidebarProps> = ({  items, isDarkMode }) => {
                   size="small"
                   startIcon={<LuLogIn className="rotate-180" />}
                   className={isOpen ? "w-[80%]" : "px-2"}
+                  onClick={() => {
+                    /* implement logout if needed */
+                  }}
                 >
                   {isOpen && <span>Logout</span>}
                 </Button>

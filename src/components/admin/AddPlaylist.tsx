@@ -10,19 +10,32 @@ import { MdPhotoSizeSelectActual } from "react-icons/md";
 import { addPlaylist } from "@/features/playlist/playlists";
 import { toast } from "react-hot-toast";
 import axios from "axios";
+import { FaSquare } from "react-icons/fa6";
+import { BsTriangleFill } from "react-icons/bs";
 
 interface PlaylistProps {
   searchTerm: string;
   setSearchTerm: (value: string) => void;
 }
 
+type CategoryType = "basic" | "advance";
+
+const categoryOptions: {
+  value: CategoryType;
+  label: string;
+  Icon: React.ElementType;
+}[] = [
+  { value: "basic", label: "Basic", Icon: BsTriangleFill },
+  { value: "advance", label: "Advance", Icon: FaSquare },
+];
+
 const AddPlaylist = ({ searchTerm, setSearchTerm }: PlaylistProps) => {
   const dispatch = useAppDispatch();
   const isDarkMode = useAppSelector((state) => state.theme.theme);
-  // const AllPlaylist = useAppSelector((state) => state.playlists.playlists);
   const [searchModal, setSearchModal] = useState(false);
   const [showPlaylistModal, setPlaylistModal] = useState(false);
   const [playlistLoading, setPlaylistLoading] = useState(false);
+  const [category, setCategory] = useState<CategoryType>("basic");
 
   const [playlist, setPlaylist] = useState<{
     title: string;
@@ -34,6 +47,7 @@ const AddPlaylist = ({ searchTerm, setSearchTerm }: PlaylistProps) => {
     thumbnail: null,
   });
 
+  console.log("inside the add playlist");
   // Escape key closes modals
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -45,6 +59,18 @@ const AddPlaylist = ({ searchTerm, setSearchTerm }: PlaylistProps) => {
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, []);
+
+  // prevent background scroll when modal open
+  useEffect(() => {
+    if (searchModal || showPlaylistModal) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [searchModal, showPlaylistModal]);
 
   // Input handlers
   const handleChange = (
@@ -61,12 +87,10 @@ const AddPlaylist = ({ searchTerm, setSearchTerm }: PlaylistProps) => {
     }
   };
 
-  // handle new playlist
-
   const handleCreatePlaylist = async () => {
     setPlaylistLoading(true);
     if (!playlist.title || !playlist.thumbnail) {
-      toast.error("title and thumbnail are mandatory", {
+      toast.error("Title and thumbnail are mandatory", {
         position: "bottom-right",
         duration: 4000,
       });
@@ -74,30 +98,26 @@ const AddPlaylist = ({ searchTerm, setSearchTerm }: PlaylistProps) => {
       return;
     }
 
-    // call the api
-
+    // Category is selected; include it
     const formData = new FormData();
     formData.append("title", playlist.title);
     formData.append("description", playlist.description);
     formData.append("thumbnail", playlist.thumbnail);
+    formData.append("category", category);
 
     try {
       const res = await axios.post("/api/courses/create-playlist", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      console.log(res.data);
+      console.log("login in add playlist", res?.data.data);
       dispatch(addPlaylist(res?.data.data));
-      // Reset modal and form
       setPlaylistModal(false);
       setPlaylist({ title: "", description: "", thumbnail: null });
-      toast.success(res?.data.message, {
+      toast.success(res?.data.message || "Playlist created", {
         position: "top-center",
       });
     } catch (error: any) {
-      console.error("Error in add playlist:", error?.response);
-
-      const status = error.response.status;
-
+      const status = error?.response?.status;
       if (status === 401) {
         toast.error("Unauthorized: Please log in again.", {
           position: "top-right",
@@ -111,21 +131,28 @@ const AddPlaylist = ({ searchTerm, setSearchTerm }: PlaylistProps) => {
           position: "top-right",
         });
       } else {
-        toast.error("Unexpected error occurred. Try again.", {
-          position: "top-right",
-        });
+        toast.error(
+          error?.response?.data?.message ||
+            "Unexpected error occurred. Try again.",
+          {
+            position: "top-right",
+          }
+        );
       }
+      console.error("Error in add playlist:", error?.response || error);
     } finally {
       setPlaylistLoading(false);
     }
   };
 
-  const handleSearch = () => {};
+  const handleSearch = () => {
+    // optional: trigger search if needed
+  };
 
   return (
-    <div className="w-full sm:w-[90%] mx-auto flex items-center justify-between px-4 sm:p-0">
+    <div className="w-full sm:w-[95%] mx-auto flex items-center justify-between px-4 sm:p-0">
       {/* Search Icon */}
-      <div className="flex items-center gap-3">
+      <div className=" flex items-center gap-3">
         <div className="block md:hidden">
           <IconButton color="secondary" onClick={() => setSearchModal(true)}>
             <FaSearch className="text-xl" />
@@ -196,6 +223,7 @@ const AddPlaylist = ({ searchTerm, setSearchTerm }: PlaylistProps) => {
             <h2 className={isDarkMode ? "text-gray-400" : "text-gray-500"}>
               New
             </h2>
+            <span className="hidden md:block">Playlist</span>
           </div>
         </div>
 
@@ -238,13 +266,13 @@ const AddPlaylist = ({ searchTerm, setSearchTerm }: PlaylistProps) => {
                 </div>
 
                 {/* Description */}
-                <div className="border border-gray-300 py-2 px-4 rounded-sm h-32">
+                <div className="border border-gray-300 py-2 px-4 rounded-sm h-32 scrollbar-hidden">
                   <textarea
                     name="description"
                     placeholder="Playlist Description"
                     value={playlist.description}
                     onChange={handleChange}
-                    className={`w-full h-full resize-none bg-transparent outline-none ${
+                    className={`w-full h-full resize-none  scrollbar-hidden bg-transparent outline-none ${
                       isDarkMode ? "text-green-300" : "text-gray-800"
                     }`}
                   />
@@ -264,17 +292,57 @@ const AddPlaylist = ({ searchTerm, setSearchTerm }: PlaylistProps) => {
                   </span>
                 </div>
 
-                {/* Submit button */}
+                {/* Category selection */}
+                <div className="w-full flex items-center gap-3">
+                  <h2 className="text-sm sm:text-base text-gray-500">
+                    Course Category:
+                  </h2>
+                  <div className="flex gap-4">
+                    {categoryOptions.map(({ value, label, Icon }) => (
+                      <div
+                        key={value}
+                        role="button"
+                        onClick={() => setCategory(value)}
+                        className={`flex items-center gap-2 p-1 rounded-md border cursor-pointer transition ${
+                          category === value
+                            ? "bg-purple-500/30 border-purple-500"
+                            : "border-gray-300"
+                        }`}
+                      >
+                        <Icon
+                          className={`text-sm sm:text-base ${
+                            category === value
+                              ? "text-purple-700"
+                              : "text-gray-500"
+                          }`}
+                        />
+                        <p className="capitalize hidden sm:block text-sm">
+                          {label}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
 
+                {/* Submit button */}
                 <Button
                   loading={playlistLoading}
                   variant="contained"
                   color="success"
                   fullWidth
-                  startIcon={!playlistLoading && <FaPlus />}
-                  onClick={() => handleCreatePlaylist()}
+                  startIcon={!playlistLoading ? <FaPlus /> : undefined}
+                  onClick={handleCreatePlaylist}
                 >
-                  {playlistLoading ? "processing" : "New Playlist"}
+                  {playlistLoading ? (
+                    <div className="flex items-center gap-2">
+                      Uploading{" "}
+                      <span className="loading loading-spinner text-secondary"></span>
+                    </div>
+                  ) : (
+                    <>
+                      <FaPlus /> Upload Module
+                    </>
+                  )}
                 </Button>
               </div>
             </div>

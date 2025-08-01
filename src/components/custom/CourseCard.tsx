@@ -21,9 +21,10 @@ interface Course {
 
 interface Props {
   courses: Course[];
+  isAdmin: boolean;
 }
 
-const CourseCard = ({ courses }: Props) => {
+const CourseCard = ({ courses, isAdmin = false }: Props) => {
   const isDarkMode = useAppSelector((state) => state.theme.theme);
   const router = useRouter();
   const textColor = isDarkMode ? "text-gray-300" : "text-gray-800";
@@ -61,7 +62,7 @@ const CourseCard = ({ courses }: Props) => {
                       <FaSquare className="text-red-500" />
                     )}
                     <span className="hidden xs:inline">
-                      {course.level.toUpperCase()}
+                      {/* {course.level.toUpperCase()} */}
                     </span>
                   </div>
 
@@ -77,14 +78,16 @@ const CourseCard = ({ courses }: Props) => {
                     <span>{course.lessons}</span>
                   </div>
                 </div>
-                <Button
-                  onClick={() => router.push(`/course/${course.id}`)}
-                  variant="outlined"
-                  size="small"
-                  startIcon={<FaPlaystation className="text-green-400" />}
-                >
-                  Start
-                </Button>
+                {!isAdmin && (
+                  <Button
+                    onClick={() => router.push(`/course/${course.id}`)}
+                    variant="outlined"
+                    size="small"
+                    startIcon={<FaPlaystation className="text-green-400" />}
+                  >
+                    Start
+                  </Button>
+                )}
               </div>
             </article>
           ))}

@@ -12,8 +12,11 @@ const commentSchema = new mongoose.Schema({
 const moduleSchema = new mongoose.Schema({
     title: { type: String, required: true },
     duration: { type: Number, default: null },
-    video: [{ type: String, default: '' }],
+    video: { type: String, default: null, required: true },
+    links: { type: String, default: null },
     comments: [{ commentSchema }]
 });
 
-export default mongoose.model('Module', moduleSchema);
+const Module = mongoose.models.Module || mongoose.model('Module', moduleSchema);
+
+export default Module;
