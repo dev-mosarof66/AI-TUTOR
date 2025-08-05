@@ -28,6 +28,24 @@ export const POST = async (
             );
         }
 
+        const newModule = new Module({
+            title,
+            duration,
+            links: comments,
+        });
+
+        if (!newModule) {
+            console.log("error while creating new module");
+            return NextResponse.json(
+                {
+                    message: "Network error. Check your internet connection.",
+                    data: null,
+                },
+                { status: 402 }
+            );
+        }
+
+
         // save the video to cloudinary
         const buffer = await video.arrayBuffer();
         const mime = video.type;
@@ -35,9 +53,10 @@ export const POST = async (
         const dataUri = `data:${mime};base64,${encoded}`;
 
         const upload = await cloudinary.uploader.upload(dataUri, {
-            folder: "playlist-thumbnails",
+            folder: "modules",
             resource_type: "video",
-            chunk_size: 6000000
+            chunk_size: 6000000,
+            public_id: newModule._id.toString()
         });
 
         console.log('upload', upload)
@@ -53,25 +72,13 @@ export const POST = async (
             );
         }
 
-        const newModule = new Module({
-            title,
-            duration,
-            links: comments,
-            video: upload?.secure_url,
-        });
+        newModule.video = upload.secure_url;
+
+
 
         console.log('newmodule', newModule)
 
-        if (!newModule) {
-            console.log("error while creating new module");
-            return NextResponse.json(
-                {
-                    message: "Network error. Check your internet connection.",
-                    data: null,
-                },
-                { status: 402 }
-            );
-        }
+
 
         const existedPlaylist = await Playlist.findById({ _id: id })
         console.log(existedPlaylist)

@@ -7,13 +7,14 @@ const playlistSchema = new mongoose.Schema({
     description: { type: String, default: "" },
     duration: { type: Number, default: null },
     popular: { type: Boolean, default: false },
-    views: { type: mongoose.Schema.ObjectId, ref: 'User', default: 0 },
+    views: { type: Number, default: 0 },
     thumbnail: { type: String, default: null, required: true },
     level: { type: String, default: null },
-    modules: [{ type: mongoose.Schema.ObjectId, ref: 'Module' }]
+    modules: [{ type: mongoose.Schema.ObjectId, ref: 'Module' }],
 }, {
-    timestamps: true
+    timestamps: true,
 });
+
 
 
 

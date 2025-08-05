@@ -7,9 +7,8 @@ import { FaSearch, FaTimes, FaPlus } from "react-icons/fa";
 import { motion } from "framer-motion";
 import "../../css/sidebar.css";
 import { MdPhotoSizeSelectActual } from "react-icons/md";
-import { addPlaylist } from "@/features/playlist/playlists";
+import { createPlaylist, getAllPlaylist } from "@/features/playlist/playlists";
 import { toast } from "react-hot-toast";
-import axios from "axios";
 import { FaSquare } from "react-icons/fa6";
 import { BsTriangleFill } from "react-icons/bs";
 
@@ -34,17 +33,18 @@ const AddPlaylist = ({ searchTerm, setSearchTerm }: PlaylistProps) => {
   const isDarkMode = useAppSelector((state) => state.theme.theme);
   const [searchModal, setSearchModal] = useState(false);
   const [showPlaylistModal, setPlaylistModal] = useState(false);
-  const [playlistLoading, setPlaylistLoading] = useState(false);
-  const [category, setCategory] = useState<CategoryType>("basic");
+  const [loading, setLoading] = useState(false);
 
   const [playlist, setPlaylist] = useState<{
     title: string;
     description: string;
     thumbnail: File | null;
+    category: string;
   }>({
     title: "",
     description: "",
     thumbnail: null,
+    category: "basic",
   });
 
   console.log("inside the add playlist");
@@ -88,63 +88,43 @@ const AddPlaylist = ({ searchTerm, setSearchTerm }: PlaylistProps) => {
   };
 
   const handleCreatePlaylist = async () => {
-    setPlaylistLoading(true);
-    if (!playlist.title || !playlist.thumbnail) {
+    if (!playlist.title.trim() || !playlist.thumbnail) {
       toast.error("Title and thumbnail are mandatory", {
         position: "bottom-right",
         duration: 4000,
       });
-      setPlaylistLoading(false);
       return;
     }
 
-    // Category is selected; include it
-    const formData = new FormData();
-    formData.append("title", playlist.title);
-    formData.append("description", playlist.description);
-    formData.append("thumbnail", playlist.thumbnail);
-    formData.append("category", category);
-
+    setLoading(true);
     try {
-      const res = await axios.post("/api/courses/create-playlist", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
+      const { title, description, thumbnail, category } = playlist;
+      await dispatch(
+        createPlaylist({
+          title: title.trim(),
+          description: description.trim(),
+          thumbnail: thumbnail!,
+          category,
+        })
+      ).unwrap();
+
+      toast.success("Playlist created successfully", { position: "top-right" });
+      setPlaylist({
+        title: "",
+        description: "",
+        thumbnail: null,
+        category: "basic",
       });
-      console.log("login in add playlist", res?.data.data);
-      dispatch(addPlaylist(res?.data.data));
       setPlaylistModal(false);
-      setPlaylist({ title: "", description: "", thumbnail: null });
-      toast.success(res?.data.message || "Playlist created", {
-        position: "top-center",
+      dispatch(getAllPlaylist());
+    } catch (err: any) {
+      toast.error(err || "Failed to create playlist", {
+        position: "top-right",
       });
-    } catch (error: any) {
-      const status = error?.response?.status;
-      if (status === 401) {
-        toast.error("Unauthorized: Please log in again.", {
-          position: "top-right",
-        });
-      } else if (status === 402) {
-        toast.error("Payment Required: Upgrade your plan to continue.", {
-          position: "top-right",
-        });
-      } else if (status === 500) {
-        toast.error("Server error: Something went wrong!", {
-          position: "top-right",
-        });
-      } else {
-        toast.error(
-          error?.response?.data?.message ||
-            "Unexpected error occurred. Try again.",
-          {
-            position: "top-right",
-          }
-        );
-      }
-      console.error("Error in add playlist:", error?.response || error);
     } finally {
-      setPlaylistLoading(false);
+      setLoading(false);
     }
   };
-
   const handleSearch = () => {
     // optional: trigger search if needed
   };
@@ -302,16 +282,16 @@ const AddPlaylist = ({ searchTerm, setSearchTerm }: PlaylistProps) => {
                       <div
                         key={value}
                         role="button"
-                        onClick={() => setCategory(value)}
+                        onClick={() => handleChange}
                         className={`flex items-center gap-2 p-1 rounded-md border cursor-pointer transition ${
-                          category === value
+                          playlist.category === value
                             ? "bg-purple-500/30 border-purple-500"
                             : "border-gray-300"
                         }`}
                       >
                         <Icon
                           className={`text-sm sm:text-base ${
-                            category === value
+                            playlist.category === value
                               ? "text-purple-700"
                               : "text-gray-500"
                           }`}
@@ -326,22 +306,20 @@ const AddPlaylist = ({ searchTerm, setSearchTerm }: PlaylistProps) => {
 
                 {/* Submit button */}
                 <Button
-                  loading={playlistLoading}
                   variant="contained"
                   color="success"
                   fullWidth
-                  startIcon={!playlistLoading ? <FaPlus /> : undefined}
                   onClick={handleCreatePlaylist}
                 >
-                  {playlistLoading ? (
+                  {loading ? (
                     <div className="flex items-center gap-2">
+                      <span className="loading loading-spinner text-white"></span>
                       Uploading{" "}
-                      <span className="loading loading-spinner text-secondary"></span>
                     </div>
                   ) : (
-                    <>
+                    <div className="flex items-center gap-2">
                       <FaPlus /> Upload Module
-                    </>
+                    </div>
                   )}
                 </Button>
               </div>

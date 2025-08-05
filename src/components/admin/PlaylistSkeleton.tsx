@@ -26,11 +26,27 @@ const PlaylistSkeleton: React.FC<PlaylistSkeletonProps> = () => {
         </div>
 
         <div className="mt-4 flex items-center justify-between">
-          <div className="flex gap-2">
-            <Skeleton variant="rectangular" width={80} height={24} />
-            <Skeleton variant="rectangular" width={100} height={24} />
+          {/* for small screen  */}
+          <div className=" sm:hidden flex gap-2">
+            <Skeleton variant="rectangular" width={30} height={24} />
+            <Skeleton variant="rectangular" width={30} height={24} />
+            <Skeleton variant="rectangular" width={30} height={24} />
           </div>
-          <Skeleton variant="rectangular" width={100} height={32} />
+          {/* large screen  */}
+          <div className="gap-2 hidden sm:flex">
+            <Skeleton variant="rectangular" width={40} height={24} />
+            <Skeleton variant="rectangular" width={40} height={24} />
+            <Skeleton variant="rectangular" width={40} height={24} />
+          </div>
+          {/* for large screen  */}
+
+          {/* for small screen  */}
+          <Skeleton
+            variant="rectangular"
+            className="block sm:hidden"
+            width={70}
+            height={32}
+          />
         </div>
       </div>
     </div>

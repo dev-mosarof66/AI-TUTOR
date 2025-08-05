@@ -24,7 +24,7 @@ interface PlaylistType {
   thumbnail: string;
   createdAt: string;
   updatedAt: string;
-  duration: number | null;
+  duration: number | null; // in seconds
   level: string | null;
   modules: ModuleType[];
   popular: boolean;
@@ -37,7 +37,7 @@ interface Prop {
 
 const CourseCard = ({ courses }: Prop) => {
   const isDarkMode = useAppSelector((state) => state.theme.theme);
-  const [showAnalytics, setShowAnalytics] = useState(false);
+  const [showAnalytics, setShowAnalytics] = useState<string | null>(null);
   const router = useRouter();
   const textColor = isDarkMode ? "text-gray-300" : "text-gray-800";
   const subTextColor = isDarkMode ? "text-gray-400" : "text-gray-600";
@@ -53,68 +53,105 @@ const CourseCard = ({ courses }: Prop) => {
           </p>
         ) : (
           <div className="w-full my-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {courses.map((course, index) => (
-              <article
-                key={course._id}
-                onClick={() => router.push(`/admin/playlists/${course._id}`)}
-                className={`w-full ${cardBg} ${
-                  index % 4 === 0 && courses.length > 1 ? "lg:col-span-2" : ""
-                } flex flex-col justify-between p-5 rounded-xl shadow-md hover:scale-[1.01] active:ring active:ring-green-500 active:scale-95 transition-all cursor-pointer duration-200`}
-              >
-                <div className="flex flex-col gap-2">
-                  <h1 className={`text-xl font-semibold ${textColor}`}>
-                    {course.title}
-                  </h1>
-                  <p className={`text-sm ${subTextColor}`}>
-                    {course.description.length > 250
-                      ? course.description.slice(0, 150) + "..."
-                      : course.description}
-                  </p>
-                </div>
+            {courses.map((course, index) => {
+              let hours = 0,
+                minutes = 0;
+              if (typeof course.duration === "number" && course.duration >= 0) {
+                hours = Math.floor(course.duration / 3600);
+                const rem = course.duration % 3600;
+                minutes = Math.floor(rem / 60);
+              }
 
-                <div className="flex  items-center justify-between flex-wrap gap-3 mt-4 text-sm">
-                  <div className="flex items-center gap-4 text-sm">
-                    {/* Level */}
-                    <div className={`flex items-center gap-1 ${iconColor}`}>
-                      {course.level === "basic" ? (
-                        <BsFillTriangleFill className="text-green-500" />
-                      ) : (
-                        <FaSquare className="text-red-500" />
-                      )}
-                      <span className="hidden xs:inline">
-                        {/* {course.level.toUpperCase()} */}
-                      </span>
+              return (
+                <article
+                  key={course._id}
+                  onClick={() => router.push(`/admin/playlists/${course._id}`)}
+                  className={`w-full ${cardBg} ${
+                    index % 4 === 0 && courses.length > 1 ? "lg:col-span-2" : ""
+                  } flex flex-col justify-between p-5 rounded-xl shadow-md hover:scale-[1.01] active:ring active:ring-green-500 active:scale-95 transition-all cursor-pointer duration-200`}
+                  aria-label={`Course card for ${course.title}`}
+                >
+                  <div className="flex flex-col gap-2">
+                    <h1 className={`text-xl font-semibold ${textColor}`}>
+                      {course.title}
+                    </h1>
+                    <p className={`text-sm ${subTextColor}`}>
+                      {course.description
+                        ? course.description.length > 250
+                          ? course.description.slice(0, 150) + "..."
+                          : course.description
+                        : "No description provided."}
+                    </p>
+                  </div>
+
+                  <div className="flex items-center justify-between flex-wrap gap-3 mt-4 text-sm">
+                    <div className="flex flex-wrap items-center gap-4 text-sm">
+                      {/* Level */}
+                      <div className={`flex items-center gap-1  ${iconColor}`}>
+                        {course.level === "basic" ? (
+                          <BsFillTriangleFill className="text-green-500" />
+                        ) : course.level === "advance" ? (
+                          <FaSquare className="text-red-500" />
+                        ) : (
+                          <div className="w-4 h-4 rounded bg-gray-400" />
+                        )}
+                      </div>
+
+                      {/* Duration */}
+                      <div className={`flex items-center gap-1 ${iconColor}`}>
+                        <FaHourglassStart size={15} />
+                        <span className="ml-1">
+                          {course.duration != null ? (
+                            <span className="text-xs">
+                              {hours}h : {minutes}m
+                            </span>
+                          ) : (
+                            "N/A"
+                          )}
+                        </span>
+                      </div>
+
+                      {/* Lessons count */}
+                      <div className={`flex items-center gap-1 ${iconColor}`}>
+                        <MdOutlineDiscount size={18} />
+                        <span className="text-sm">
+                          {course.modules?.length ?? 0}
+                        </span>
+                      </div>
                     </div>
 
-                    {/* Duration */}
-                    <div className={`flex items-center gap-1 ${iconColor}`}>
-                      <FaHourglassStart />
-                      <span>{course.duration}</span>
-                    </div>
-
-                    {/* Lessons */}
-                    <div className={`flex items-center gap-1 ${iconColor}`}>
-                      <MdOutlineDiscount />
-                      {/* <span>{course.modules}</span> */}
+                    <div>
+                      <Button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setShowAnalytics(course._id);
+                        }}
+                        variant="outlined"
+                        size="small"
+                        startIcon={
+                          <IoAnalyticsSharp className="text-green-400" />
+                        }
+                      >
+                        ANALYTICS
+                      </Button>
                     </div>
                   </div>
-                  <Button
-                    onClick={() => setShowAnalytics(true)}
-                    variant="outlined"
-                    size="small"
-                    startIcon={<IoAnalyticsSharp className="text-green-400" />}
-                  >
-                    ANALYTICS
-                  </Button>
-                </div>
-              </article>
-            ))}
+                </article>
+              );
+            })}
           </div>
         )}
       </div>
+
       {showAnalytics && (
-        <div className="w-full h-screen overflow-y-scroll flex justify-center fixed top-0 left-0  backdrop-blur-sm">
-          <CourseAnalyticsPage courseId="ml-beginners" />
+        <div className="w-full h-screen overflow-y-scroll flex justify-center fixed top-0 left-0 backdrop-blur-sm">
+          <CourseAnalyticsPage courseId={showAnalytics} />
+          <button
+            onClick={() => setShowAnalytics(null)}
+            className="absolute top-4 right-4 px-3 py-1 bg-white rounded shadow"
+          >
+            Close
+          </button>
         </div>
       )}
     </div>

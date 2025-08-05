@@ -362,3 +362,97 @@ export const webDevPlaylist = [
         link: "https://www.youtube.com/watch?v=gYzHS-n2gqU",
     },
 ];
+
+
+export const outlineResponse = {
+  "id": "1754404679282",
+  "title": "Backend Web Development with JavaScript: A 30-Day Intensive",
+  "modules": [
+    {
+      "title": "Module 1: Node.js & JavaScript Fundamentals (Days 1-5)",
+      "topics": [
+        "JavaScript ES6+ Refresher (Async/Await, Promises, Destructuring, Modules)",
+        "Introduction to Node.js: Runtime Environment & Use Cases",
+        "Node.js Architecture: Event Loop, Non-blocking I/O",
+        "NPM (Node Package Manager): Managing Dependencies, `package.json`",
+        "Core Node.js Modules: `fs` (File System), `path`, `events`, `util`",
+        "Building a Simple HTTP Server with Node.js `http` Module",
+        "Understanding Environment Variables (`.env` with `dotenv`)"
+      ]
+    },
+    {
+      "title": "Module 2: Building Web Servers with Express.js (Days 6-10)",
+      "topics": [
+        "Introduction to HTTP: Methods, Status Codes, Headers",
+        "Express.js Framework: Setup, Application Structure, and Basic Routing",
+        "Middleware in Express: Understanding, Using Built-in, Third-Party, and Custom Middleware",
+        "Handling Request Body: Parsing JSON and URL-encoded Data (`express.json`, `express.urlencoded`)",
+        "Route Parameters and Query Strings",
+        "Error Handling Strategies in Express.js",
+        "Serving Static Files and Basic Templating (briefly)"
+      ]
+    },
+    {
+      "title": "Module 3: Data Persistence with Databases (Days 11-15)",
+      "topics": [
+        "Introduction to Databases: Relational vs. NoSQL Concepts",
+        "**SQL Databases (e.g., PostgreSQL):**",
+        "  - Basic SQL Queries (SELECT, INSERT, UPDATE, DELETE, JOINs)",
+        "  - Database Schema Design Principles",
+        "  - Introduction to ORMs (Object-Relational Mappers): Sequelize",
+        "  - Connecting Node.js/Express to PostgreSQL with Sequelize",
+        "**NoSQL Databases (e.g., MongoDB):**",
+        "  - Document-Oriented Database Concepts",
+        "  - Introduction to ODMs (Object-Document Mappers): Mongoose",
+        "  - Connecting Node.js/Express to MongoDB with Mongoose",
+        "Implementing CRUD Operations with Selected Database (e.g., MongoDB with Mongoose)"
+      ]
+    },
+    {
+      "title": "Module 4: Designing & Building RESTful APIs (Days 16-20)",
+      "topics": [
+        "Understanding REST Principles: Resources, URIs, Statelessness, Idempotency",
+        "Designing RESTful API Endpoints and Naming Conventions",
+        "Implementing Comprehensive CRUD APIs with Express.js and Database",
+        "API Testing Tools: Postman/Insomnia for Requesting and Inspecting APIs",
+        "Advanced Middleware Usage: CORS, Logging (Morgan)",
+        "Request Validation: Using Libraries like `express-validator` or `Joi`",
+        "Implementing Pagination, Filtering, and Sorting in APIs",
+        "Error Handling for API Responses"
+      ]
+    },
+    {
+      "title": "Module 5: Security, Authentication & Authorization (Days 21-25)",
+      "topics": [
+        "Web Security Fundamentals: Common Vulnerabilities (XSS, CSRF, SQL Injection, Brute-Force)",
+        "Password Hashing with `bcrypt.js`",
+        "**Authentication Strategies:**",
+        "  - Session-based Authentication (Introduction)",
+        "  - Token-based Authentication (JSON Web Tokens - JWT)",
+        "  - Implementing JWT for User Registration and Login",
+        "  - Storing and Validating JWTs",
+        "Authorization: Protecting Routes with JWT Middleware",
+        "Role-Based Access Control (RBAC) Concepts and Implementation",
+        "Rate Limiting (`express-rate-limit`)"
+      ]
+    },
+    {
+      "title": "Module 6: Testing, Deployment & Advanced Topics (Days 26-30)",
+      "topics": [
+        "**Testing Backend Applications:**",
+        "  - Unit Testing with Jest (or Mocha/Chai)",
+        "  - Integration Testing for API Endpoints",
+        "  - Test-Driven Development (TDD) Concepts and Practice",
+        "Logging Best Practices with Libraries like Winston",
+        "**Deployment Strategies:**",
+        "  - Introduction to Cloud Platforms (Heroku, Vercel, Render)",
+        "  - Using Process Managers like PM2",
+        "  - Basic Introduction to Docker for Containerization",
+        "Brief Introduction to WebSockets for Real-time Applications",
+        "API Documentation with Swagger/OpenAPI (Concepts)",
+        "Scaling Considerations (Load Balancing, Caching - brief concepts)",
+        "Final Project Kickoff/Review: Applying Learned Concepts to Build a Personal Project"
+      ]
+    }
+  ]
+}

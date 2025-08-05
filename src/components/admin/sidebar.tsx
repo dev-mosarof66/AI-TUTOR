@@ -35,16 +35,26 @@ const Sidebar: React.FC<SidebarProps> = ({ items, isDarkMode }) => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  const handleActiveTab = (navigation: string, tab: number) => {
+    localStorage.setItem("sidebar", JSON.stringify(tab));
+    router.push(navigation);
+    setActiveTab(tab);
+  };
+
   useEffect(() => {
-    if (!pathname) return;
-    const matched = items.find((i) => {
-      return pathname === i.navigation;
-    });
-    console.log(matched);
-    if (matched) {
-      setActiveTab(matched.id);
-    }
-  }, [pathname, items]);
+    const getActiveTab = () => {
+      console.log("inside the sidebar useeffect");
+      const tab = localStorage.getItem("sidebar");
+      if (!tab) {
+        setActiveTab(1);
+        return;
+      }
+      console.log(tab);
+      const parsedTab = JSON.parse(tab);
+      setActiveTab(parsedTab);
+    };
+    getActiveTab();
+  }, [activeTab]);
 
   return (
     <div
@@ -104,14 +114,13 @@ const Sidebar: React.FC<SidebarProps> = ({ items, isDarkMode }) => {
                     <Button
                       variant="text"
                       onClick={() => {
-                        setActiveTab(item.id);
-                        router.push(item.navigation);
+                        handleActiveTab(item.navigation, item.id);
                       }}
                       className="w-full flex items-center justify-center"
                     >
                       <div
                         className={`py-1 ${
-                          item.id === 4
+                          item.id === 5
                             ? "text-amber-400"
                             : isDarkMode
                             ? "text-green-500"
@@ -127,8 +136,7 @@ const Sidebar: React.FC<SidebarProps> = ({ items, isDarkMode }) => {
                 ) : (
                   <div
                     onClick={() => {
-                      setActiveTab(item.id);
-                      router.push(item.navigation);
+                      handleActiveTab(item.navigation, item.id);
                     }}
                     className={`w-full flex items-center gap-2 py-2 px-4 cursor-pointer transition ${
                       activeTab === item.id
@@ -138,7 +146,7 @@ const Sidebar: React.FC<SidebarProps> = ({ items, isDarkMode }) => {
                   >
                     <div
                       className={`${
-                        item.id === 4
+                        item.id === 5
                           ? "text-amber-400"
                           : isDarkMode
                           ? "text-green-500"

@@ -1,22 +1,31 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import React, { useState, FormEvent, ChangeEvent, useRef } from "react";
-import { useAppSelector } from "@/app/hooks";
-import { Button, IconButton } from "@mui/material";
-import { FaPlus, FaTimes } from "react-icons/fa";
-import { FaVideo } from "react-icons/fa6";
-import { motion } from "framer-motion";
+import React, { useState, ChangeEvent, useRef } from "react";
+import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import "../../css/sidebar.css";
 import { toast } from "react-hot-toast";
-import axios from "axios";
 import formatHMS from "@/helper/convertTime";
+import { addModule, getAllModules } from "@/features/moudles/modules";
+import VideoModal from "./VideoModal";
+import { FaPlus, FaDeleteLeft } from "react-icons/fa6";
+import { Button } from "@mui/material";
+import { deletePlaylist } from "@/features/playlist/playlists";
+import { useRouter } from "next/navigation";
 
 interface AddModuleProps {
   playlistId: string;
-  onSuccess?: (module: any) => void;
 }
 
-const AddModule: React.FC<AddModuleProps> = ({ playlistId, onSuccess }) => {
+interface DeleteModalProps {
+  onConfirm: () => void;
+  onClose: () => void;
+  isDarkMode: boolean;
+}
+
+const AddModule: React.FC<AddModuleProps> = ({ playlistId }) => {
+  const router = useRouter()
+  console.log("inside the add modules page");
+  const dispatch = useAppDispatch();
   const isDarkMode = useAppSelector((state) => state.theme.theme);
   const [showModal, setShowModal] = useState(false);
   const [title, setTitle] = useState("");
@@ -29,6 +38,9 @@ const AddModule: React.FC<AddModuleProps> = ({ playlistId, onSuccess }) => {
   const [videoFile, setVideoFile] = useState<File | null>(null);
   const [comments, setComments] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [deleteModal, setDeleteModal] = useState(false);
+  const { playlists } = useAppSelector((state) => state.playlists);
+  console.log(playlists);
 
   const reset = () => {
     setTitle("");
@@ -70,17 +82,9 @@ const AddModule: React.FC<AddModuleProps> = ({ playlistId, onSuccess }) => {
     vidEl.src = url;
   };
 
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     if (!title.trim()) {
       toast.error("Title is required");
-      return;
-    }
-
-    const totalSeconds =
-      duration.hours * 3600 + duration.minutes * 60 + duration.seconds;
-    if (totalSeconds <= 0) {
-      toast.error("Invalid duration");
       return;
     }
 
@@ -89,157 +93,128 @@ const AddModule: React.FC<AddModuleProps> = ({ playlistId, onSuccess }) => {
       return;
     }
 
-    setSubmitting(true);
-    const form = new FormData();
-    form.append("title", title.trim());
-    form.append("duration", totalSeconds.toString());
-    form.append("comments", comments.trim());
-    form.append("video", videoFile);
+    const totalSeconds =
+      duration.hours * 3600 + duration.minutes * 60 + duration.seconds;
 
+    if (totalSeconds <= 0) {
+      toast.error("Invalid duration");
+      return;
+    }
+
+    setSubmitting(true);
     try {
-      const res = await axios.post(
-        `/api/courses/modules/create/${playlistId}`,
-        form,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        }
+      dispatch(
+        addModule({
+          playlistId,
+          title: title.trim(),
+          durationSeconds: totalSeconds,
+          comments: comments.trim(),
+          videoFile,
+        })
       );
-      toast.success("Module added", { position: "top-center" });
-      onSuccess?.(res.data?.data || null);
+
       reset();
-      setShowModal(false);
     } catch (err: any) {
+      toast.error(
+        typeof err === "string" ? err : err?.message || "Failed to add module",
+        { position: "top-right" }
+      );
       console.error("Add module error:", err);
-      toast.error(err?.response?.data?.message || "Failed to add module", {
-        position: "top-right",
-      });
     } finally {
       setSubmitting(false);
+      setShowModal(false);
+      dispatch(getAllModules(playlistId));
     }
   };
 
-  const baseBg = isDarkMode ? "bg-gray-900" : "bg-white";
-  const cardBg = isDarkMode ? "bg-gray-800" : "bg-gray-100";
-  const borderColor = isDarkMode ? "border-gray-700" : "border-gray-300";
-  const textColor = isDarkMode ? "text-gray-200" : "text-gray-800";
-  const secondaryText = isDarkMode ? "text-gray-400" : "text-gray-600";
+  const handlePlaylistDelete = async () => {
+    dispatch(deletePlaylist(playlistId));
+    setDeleteModal(false)
+    router.push('/admin/playlists')
+  };
 
   return (
     <>
       <div className="w-full flex items-center justify-end px-6 py-4 xs:px-10">
         <div
-          onClick={() => setShowModal(true)}
-          className={`flex items-center gap-2 ${
-            isDarkMode ? "bg-purple-600/20" : "bg-purple-500/20"
-          } p-1 px-4 rounded-lg hover:brightness-105 active:ring active:ring-green-500 transition duration-300 cursor-pointer z-50 relative`}
+          className={`w-full flex flex-row-reverse items-center justify-between`}
         >
-          <FaPlus />
-          <p className="block xs:hidden">Add</p>
-          <p className="hidden xs:block">Add Module</p>
+          <div
+            onClick={() => setDeleteModal(true)}
+            className={`flex items-center gap-3 ${
+              isDarkMode ? "bg-purple-600/20" : "bg-purple-500/20"
+            } p-1 px-4 rounded-lg hover:brightness-105 active:ring active:ring-green-500 transition duration-300 cursor-pointer z-50 relative`}
+          >
+            <FaDeleteLeft size={20} className="text-red-500" />
+            <p className="hidden xs:block">Drop</p>
+          </div>
+          <div
+            onClick={() => setShowModal(true)}
+            className={`flex items-center gap-2 ${
+              isDarkMode ? "bg-purple-600/20" : "bg-purple-500/20"
+            } p-1 px-4 rounded-lg hover:brightness-105 active:ring active:ring-green-500 transition duration-300 cursor-pointer z-50 relative`}
+          >
+            <FaPlus />
+            <p className="hidden xs:block">Module</p>
+          </div>
         </div>
       </div>
 
       {showModal && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="fixed inset-0 z-50 backdrop-blur-xs flex items-center justify-center bg-black/50 px-4"
-        >
-          <div
-            className={`w-full max-w-lg rounded-md shadow-md overflow-hidden ${baseBg} border ${borderColor}`}
-          >
-            <div
-              className={`flex justify-end items-center px-6 py-4 border-b ${
-                isDarkMode ? "border-gray-700" : "border-gray-200"
-              }`}
-            >
-              <IconButton
-                size="small"
-                onClick={() => {
-                  setShowModal(false);
-                  reset();
-                }}
-              >
-                <FaTimes className={textColor} />
-              </IconButton>
-            </div>
+        <VideoModal
+          isDarkMode={isDarkMode}
+          setShowModal={setShowModal}
+          reset={reset}
+          handleSubmit={handleSubmit}
+          title={title}
+          setTitle={setTitle}
+          submitting={submitting}
+          handleVideoInput={handleVideoInput}
+          videoFile={videoFile}
+          duration={duration}
+          comments={comments}
+          setComments={setComments}
+        />
+      )}
 
-            <form onSubmit={handleSubmit} className="px-6 py-4 space-y-4">
-              {/* Title */}
-              <div className={`w-full`}>
-                <input
-                  type="text"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  placeholder="Enter module title"
-                  className={`w-full border rounded px-3 py-2 outline-none focus:ring focus:ring-purple-500 ${cardBg} ${borderColor} ${textColor}`}
-                  disabled={submitting}
-                  required
-                />
-              </div>
-
-              {/* Video Upload */}
-              <div className="relative flex flex-col items-center justify-center border border-dashed border-gray-400 rounded-md p-4 py-8">
-                <input
-                  type="file"
-                  accept="video/*"
-                  onChange={handleVideoInput}
-                  className="absolute inset-0 opacity-0 cursor-pointer"
-                />
-                <FaVideo className="text-4xl text-purple-400" />
-                <span className="text-sm mt-2 text-gray-500">
-                  {videoFile?.name || "Choose Module"}
-                </span>
-              </div>
-
-              {/* Duration */}
-              <div className="flex items-center gap-2">
-                <p className={`text-sm font-medium ${textColor}`}>
-                  Module Duration :
-                </p>
-                <div className={`text-sm ${secondaryText}`}>
-                  {duration.hours}h {duration.minutes}m {duration.seconds}s
-                </div>
-              </div>
-
-              {/* Comments */}
-              <div className="flex flex-col gap-1">
-                <textarea
-                  value={comments}
-                  onChange={(e) => setComments(e.target.value)}
-                  placeholder="If any links for this module"
-                  className={`w-full border rounded px-3 py-2 outline-none resize-none focus:ring focus:ring-purple-500 ${cardBg} ${borderColor} ${textColor}`}
-                  rows={3}
-                  disabled={submitting}
-                />
-              </div>
-
-              {/* Actions */}
-              <div className="flex justify-center gap-2 pt-2">
-                <Button
-                  variant="contained"
-                  color="success"
-                  type="submit"
-                  disabled={submitting}
-                  className="flex items-center gap-2"
-                >
-                  {submitting ? (
-                    <div className="flex items-center gap-2 text-white">
-                      <span className="loading loading-sm loading-spinner text-primary"></span>
-                      Uploading{" "}
-                    </div>
-                  ) : (
-                    <>
-                      <FaPlus /> Upload Module
-                    </>
-                  )}
-                </Button>
-              </div>
-            </form>
-          </div>
-        </motion.div>
+      {deleteModal && (
+        <DeleteModal
+          isDarkMode={isDarkMode}
+          onConfirm={handlePlaylistDelete}
+          onClose={() => setDeleteModal(false)}
+        />
       )}
     </>
+  );
+};
+
+export const DeleteModal = ({
+  onConfirm,
+  onClose,
+  isDarkMode,
+}: DeleteModalProps) => {
+  return (
+    <div
+      className="w-full h-screen fixed top-0 left-0 z-50 backdrop-blur-xs flex flex-col items-center justify-center"
+    >
+      <div
+        className={`${
+          isDarkMode ? "bg-gray-700 text-gray-100" : "bg-white"
+        } p-3 sm:p-4 py-6 rounded-sm flex flex-col gap-6`}
+      >
+        <div
+          className={`${isDarkMode ? "bg-gray-700 text-gray-100" : "bg-white"}`}
+        >
+          <h1>Are you sure you want to drop this playlist?</h1>
+        </div>
+        <div className="w-full flex items-center justify-end gap-4">
+          <Button onClick={onClose}>Cancel</Button>
+          <Button color="primary" variant="contained" onClick={onConfirm}>
+            Drop
+          </Button>
+        </div>
+      </div>
+    </div>
   );
 };
 

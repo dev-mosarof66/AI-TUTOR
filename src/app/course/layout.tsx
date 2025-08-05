@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect } from "react";
-import Header from "@/components/custom/CourseHeader";
+import Header from "@/components/custom/Header";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import { changeTheme } from "@/features/theme/themeSlice";
 import "../../css/sidebar.css";

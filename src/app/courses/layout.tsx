@@ -6,7 +6,7 @@ import { MdHome } from "react-icons/md";
 import "../../css/sidebar.css";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import { changeTheme } from "@/features/theme/themeSlice";
-import Header from "@/components/custom/CourseHeader";
+import Header from "@/components/custom/Header";
 import Search from "@/components/custom/Search";
 
 interface Type {

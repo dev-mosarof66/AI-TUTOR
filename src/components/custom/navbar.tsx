@@ -6,24 +6,66 @@ import "../../css/navbar.css";
 import { FiChevronsRight } from "react-icons/fi";
 import { usePathname, useRouter } from "next/navigation";
 
+const NavItem = [
+  {
+    id: 1,
+    name: "Home",
+    navigation: "/",
+  },
+  {
+    id: 2,
+    name: "Pricing",
+    navigation: "/pricing",
+  },
+  {
+    id: 3,
+    name: "Docs",
+    navigation: "/docs",
+  },
+  {
+    id: 4,
+    name: "Course",
+    navigation: "/courses",
+  },
+];
+
 const Navbar = () => {
   const router = useRouter();
   const location = usePathname();
   const isCoursesRoute = location === "/courses" ? true : false;
   console.log(isCoursesRoute);
   const [showNavbarContent, setShowNavbarContent] = useState(false);
+  const [activeNav, setActiveNav] = useState(1);
+
+  const handleNavbar = (item: number, navigation: string) => {
+    localStorage.setItem("navbar", JSON.stringify(item));
+    setActiveNav(item);
+    router.push(navigation);
+  };
   return (
     <nav className="w-full fixed top-0 right-0 left-0 z-50 flex flex-col items-center justify-center text-gray-200  backdrop-blur-3xl">
       <div className="w-full max-w-7xl mx-auto flex items-center justify-between px-8 sm:px-10 backdrop-blur-3xl py-6 rounded-md">
         <div>
-          <p className="font-semibold text-base sm:text-lg md:text-xl">Neura</p>
+          <p className="font-semibold text-base sm:text-lg md:text-xl text-purple-500">
+            Neura
+          </p>
         </div>
         {!isCoursesRoute && (
           <ul className={`hidden sm:flex items-center gap-3`}>
-            <li>Home</li>
-            <li>Pricing</li>
-            <li>Blogs</li>
-            <li onClick={() => router.push("/courses")}>Courses</li>
+            {NavItem.map((nav) => (
+              <li
+                onClick={() => handleNavbar(nav.id, nav.navigation)}
+                key={nav.id}
+                className={`
+                 ${
+                   activeNav === nav.id
+                     ? "text-green-500 hover:text-green-500/50 active:bg-green-500/70"
+                     : "text-gray-400 hover:text-green-500 active:text-green-500/50 "
+                 } cursor-pointer transition duration-300 delay-75 font-semibold`}
+              >
+                {nav.name}
+              </li>
+            ))}
           </ul>
         )}
         {isCoursesRoute ? (

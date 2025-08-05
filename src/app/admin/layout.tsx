@@ -5,8 +5,8 @@ import { changeTheme } from "@/features/theme/themeSlice";
 import Header from "@/components/admin/Header";
 import "@/css/sidebar.css";
 import Sidebar from "@/components/admin/sidebar";
-import { MdDashboard, MdFeedback } from "react-icons/md";
-import { FaUsers, FaRobot, FaCode } from "react-icons/fa";
+import { MdDashboard, MdFeedback, MdLabelOutline } from "react-icons/md";
+import { FaUsers, FaRobot } from "react-icons/fa";
 import { FaChartLine, FaMoneyBill } from "react-icons/fa6";
 import { FiSettings } from "react-icons/fi";
 import { IoBookmarks } from "react-icons/io5";
@@ -31,20 +31,20 @@ const Tabs = [
   {
     id: 3,
     name: "Playlists",
-    Icon: () => <IoBookmarks  size={22} />,
+    Icon: () => <IoBookmarks size={22} />,
     navigation: "/admin/playlists",
   },
   {
     id: 4,
-    name: "AI Sessions",
-    Icon: () => <FaRobot size={22} />,
-    navigation: "/admin/ai-sessions",
+    name: "Outline",
+    Icon: () => <MdLabelOutline size={24} />,
+    navigation: "/admin/outline",
   },
   {
     id: 5,
-    name: "Code Logs",
-    Icon: () => <FaCode size={22} />,
-    navigation: "/admin/code-logs",
+    name: "AI",
+    Icon: () => <FaRobot size={22} />,
+    navigation: "/admin/outline",
   },
   {
     id: 6,

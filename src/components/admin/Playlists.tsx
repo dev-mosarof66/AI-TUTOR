@@ -45,6 +45,9 @@ const Playlists = ({ data, loading }: Prop) => {
           <PlaylistSkeleton />
           <PlaylistSkeleton />
           <PlaylistSkeleton />
+          <PlaylistSkeleton />
+          <PlaylistSkeleton />
+          <PlaylistSkeleton />
         </div>
       ) : (
         <CourseCard courses={data} />

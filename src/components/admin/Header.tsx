@@ -64,7 +64,7 @@ const Header = ({ items, isLarge }: HeaderProps) => {
 
       {/* Dropdown nav menu */}
       {shownavbar && !isLarge && (
-        <div className="w-full fixed top-16 left-0 z-50 backdrop-blur-2xl bg-black/10 py-4 flex flex-col items-center gap-2">
+        <div className="w-full fixed top-16 left-0 z-[99999] backdrop-blur-sm py-4 flex flex-col items-center gap-2">
           {items.map((tab) => (
             <div
               onClick={() => {

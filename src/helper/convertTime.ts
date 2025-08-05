@@ -11,11 +11,6 @@ const formatHMS = (totalSeconds: number) => {
     const minutes = Math.floor((totalSeconds % 3600) / 60);
     const seconds = Math.floor(totalSeconds % 60);
 
-    let formatted = "";
-    if (hours > 0) formatted += `${hours}h `;
-    if (minutes > 0) formatted += `${minutes}m `;
-    if (seconds > 0 || (!hours && !minutes)) formatted += `${seconds}s`;
-
     return { hours, minutes, seconds };
 }
 

@@ -40,7 +40,6 @@ export default function RootLayout({
         <AppRouterCacheProvider>
           <ThemeProvider>
             <ThemeProviderClient>
-              {/* ✅ Add Toaster here */}
               <Toaster position="top-right" />
               {children}
             </ThemeProviderClient>
