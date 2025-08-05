@@ -6,9 +6,9 @@ import cloudinary from "@/lib/cloudinary"; // v2 configured
 
 export const DELETE = async (
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) => {
-  const { id: playlistId } = params;
+  const { id: playlistId } = await params;
   if (!playlistId) {
     return NextResponse.json({ message: "Playlist ID is required." }, { status: 400 });
   }

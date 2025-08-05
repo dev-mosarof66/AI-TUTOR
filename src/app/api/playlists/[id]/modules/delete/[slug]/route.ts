@@ -8,7 +8,7 @@ connectDB();
 
 export const DELETE = async (
     req: NextRequest,
-    { params }: { params: { id: string; slug: string } }
+    { params }: { params: Promise<{ id: string; slug: string }> }
 ) => {
     try {
         const { id: playlistId, slug: moduleId } = await params;
