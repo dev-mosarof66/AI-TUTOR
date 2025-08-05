@@ -5,12 +5,12 @@ import mongoose from "mongoose";
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
   try {
     await connectDB();
 
-    const { id } = params;
+    const { id } = context.params;
 
     if (!mongoose.isValidObjectId(id)) {
       return NextResponse.json({ message: "Invalid ID" }, { status: 400 });
@@ -29,7 +29,7 @@ export async function DELETE(
       { message: "Outline deleted successfully." },
       { status: 200 }
     );
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     console.error("Delete failed:", error.message);
     return NextResponse.json(
@@ -37,4 +37,5 @@ export async function DELETE(
       { status: 500 }
     );
   }
-};
+}
+
