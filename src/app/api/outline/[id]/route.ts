@@ -3,10 +3,10 @@ import { connectDB } from "@/dbConfig/db";
 import Outline from "@/models/outline.models";
 import mongoose from "mongoose";
 
-export const DELETE = async (
+export async function DELETE(
   req: NextRequest,
   { params }: { params: { id: string } }
-) => {
+) {
   try {
     await connectDB();
 
@@ -29,7 +29,7 @@ export const DELETE = async (
       { message: "Outline deleted successfully." },
       { status: 200 }
     );
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     console.error("Delete failed:", error.message);
     return NextResponse.json(
