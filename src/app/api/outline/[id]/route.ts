@@ -20,7 +20,7 @@ export async function DELETE(
 
     if (!deleted) {
       return NextResponse.json(
-        { message: "Outline not found" },
+        { message: "Outline not found" },     
         { status: 404 }
       );
     }

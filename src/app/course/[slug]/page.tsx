@@ -7,6 +7,7 @@ import CourseDescription from "@/components/custom/CourseDescription";
 import { MdKeyboardArrowUp } from "react-icons/md";
 import { webDevPlaylist } from "@/data";
 import Playlist from "@/components/custom/Playlist";
+import { useParams } from "next/navigation";
 
 interface PlaylistType {
   title: string;
@@ -15,6 +16,8 @@ interface PlaylistType {
 }
 
 const CourseLayout = () => {
+  const params =  useParams<{slug:string}>()
+  console.log(params?.slug)
   const isDarkMode = useAppSelector((state) => state.theme.theme);
   const dispatch = useAppDispatch();
   const [fullPlaylist, setFullPlaylist] = useState(false);
@@ -30,7 +33,8 @@ const CourseLayout = () => {
       {/* small screen  */}
       <div className="flex-1 w-[96%] sm:w-[90%] mx-auto grid grid-cols-1 lg:hidden gap-6 relative">
         <div className="w-full mx-auto flex items-center justify-center">
-          <VideoPlayer source={runningVideo.link} />
+          <VideoPlayer  />
+          {/* <VideoPlayer source={runningVideo.link} /> */}
         </div>
 
         {/* playlist goes here  */}
@@ -80,7 +84,8 @@ const CourseLayout = () => {
       <div className="flex-1 w-[90%]  mx-auto hidden lg:flex lg:flex-row">
         <div className="w-[70%] grid grid-cols-1 gap-6">
           <div className="w-full">
-            <VideoPlayer source={runningVideo.link} />
+            <VideoPlayer  />
+            {/* <VideoPlayer source={runningVideo.link} /> */}
           </div>
           <div className="w-full mx-auto flex flex-col gap-5">
             <CourseDescription title={runningVideo.title} />
