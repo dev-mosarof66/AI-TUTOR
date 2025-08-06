@@ -1,11 +1,13 @@
 "use client";
-import React, {  useState } from "react";
-import {  IconButton } from "@mui/material";
+import React, { useState } from "react";
+import { Button, IconButton } from "@mui/material";
 import "../../css/sidebar.css";
 import { useRouter } from "next/navigation";
 import { FaBars } from "react-icons/fa6";
 import { FaStar, FaFire } from "react-icons/fa";
 import { MdHome } from "react-icons/md";
+import { useAppSelector } from "@/app/hooks";
+import { LuArrowBigUpDash, LuLogIn } from "react-icons/lu";
 
 const Items = [
   {
@@ -29,9 +31,10 @@ const Items = [
 ];
 const FloatSidebar = () => {
   const router = useRouter();
-  // const isDarkMode = useAppSelector((state) => state.theme.theme);
+  const isDarkMode = useAppSelector((state) => state.theme.theme);
   const [isOpen, setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState(1);
+  const user = false;
 
   return (
     <div className="block md:hidden">
@@ -40,7 +43,9 @@ const FloatSidebar = () => {
       </IconButton>
       <div className="w-full  fixed left-0 top-14 z-50 backdrop-blur-2xl">
         <div
-          className={`w-[90%] mx-auto flex flex-col gap-2 items-center justify-center text-gray-300`}
+          className={`w-[90%] mx-auto flex flex-col gap-2 items-center justify-center ${
+            isDarkMode ? "text-gray-300" : " text-gray-600"
+          }`}
         >
           {Items.map((Item) => (
             <>
@@ -50,7 +55,7 @@ const FloatSidebar = () => {
                   onClick={() => {
                     setActiveTab(Item.id);
                     router.push(Item.link);
-                    setIsOpen(false)
+                    setIsOpen(false);
                   }}
                   className={`w-full flex items-center justify-center gap-2 py-2 px-4 ${
                     activeTab === Item.id
@@ -64,7 +69,48 @@ const FloatSidebar = () => {
             </>
           ))}
         </div>
-        <div className="w-full h-[1px] my-4 bg-gray-600/50"></div>
+        {isOpen && (
+          <div>
+            <div className="w-full h-[1px] my-4 bg-gray-600/50"></div>
+
+            <div className="w-full backdrop-blur-3xl pb-4">
+              <div className="w-full flex flex-col items-center justify-center gap-3">
+                <div className="w-full flex items-center justify-center">
+                  <Button
+                    component="label"
+                    className={`${isOpen ? "w-[80%]" : "px-2"}`}
+                    role={undefined}
+                    variant="outlined"
+                    tabIndex={-1}
+                    startIcon={<LuArrowBigUpDash />}
+                  >
+                    <p className={`${isOpen ? "block" : "hidden"}`}>UPGRADE</p>
+                  </Button>
+                </div>
+                <div className="w-full flex items-center justify-center">
+                  {user ? (
+                    <div></div>
+                  ) : (
+                    <Button
+                      onClick={() => router.push("/auth")}
+                      component="label"
+                      className={`${isOpen ? "w-[80%]" : "px-2"}`}
+                      role={undefined}
+                      variant="contained"
+                      tabIndex={-1}
+                      startIcon={<LuLogIn />}
+                    >
+                      <p className={`${isOpen ? "block" : "hidden"}`}>
+                        {" "}
+                        Join Now
+                      </p>
+                    </Button>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

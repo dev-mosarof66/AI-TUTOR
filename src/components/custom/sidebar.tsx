@@ -102,7 +102,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             }`}
           >
             {items.map((Item, index) => (
-              <>
+              <div key={index}>
                 {!isOpen ? (
                   <Button
                     variant="text"
@@ -110,7 +110,6 @@ const Sidebar: React.FC<SidebarProps> = ({
                       setActiveTab(Item.id);
                       router.push(Item.link);
                     }}
-                    key={index}
                     className={`w-fit flex items-center  px-0 }hover:bg-gray-500/20 active:bg-gray-500/30 active:scale-95 cursor-pointer transition duration-300 delay-75`}
                   >
                     <Tooltip title={Item.name} arrow placement="right">
@@ -130,7 +129,6 @@ const Sidebar: React.FC<SidebarProps> = ({
                   </Button>
                 ) : (
                   <div
-                    key={index}
                     onClick={() => {
                       setActiveTab(Item.id);
                       router.push(Item.link);
@@ -153,7 +151,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                     <p>{Item.name}</p>
                   </div>
                 )}
-              </>
+              </div>
             ))}
           </div>
           <div className="w-full h-[1px] my-4 bg-gray-600/50"></div>
@@ -179,6 +177,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                 <div></div>
               ) : (
                 <Button
+                  onClick={() => router.push("/auth")}
                   component="label"
                   className={`${isOpen ? "w-[80%]" : "px-2"}`}
                   role={undefined}
