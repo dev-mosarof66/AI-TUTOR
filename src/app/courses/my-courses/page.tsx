@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import CourseCard from "@/components/custom/CourseCard";
 import { Button } from "@mui/material";
 import { useRouter } from "next/navigation";
@@ -98,7 +98,7 @@ const courses = [
   },
 ];
 
-const Strike = () => {
+const MyCourses = () => {
   const router = useRouter();
   return (
     <div className="w-full h-screen">
@@ -122,4 +122,4 @@ const Strike = () => {
   );
 };
 
-export default Strike;
+export default MyCourses;
