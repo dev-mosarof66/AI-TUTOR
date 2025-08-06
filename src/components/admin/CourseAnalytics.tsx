@@ -175,7 +175,7 @@ const CourseAnalyticsPage: React.FC<Props> = ({ courseId, analyticsData }) => {
       <div className="w-full space-y-6 p-6">
         {/* Header + summary metrics */}
         <div className="w-full grid grid-cols-1 sm:grid-cols-3 gap-6">
-          <Card className={`shadow ${isDarkMode?"bg-gray-600":""}`}>
+          <Card className={`shadow ${isDarkMode ? "bg-gray-600" : ""}`}>
             <CardContent>
               <div className="flex items-center gap-3">
                 <FaUserGraduate size={24} />
@@ -285,9 +285,7 @@ const CourseAnalyticsPage: React.FC<Props> = ({ courseId, analyticsData }) => {
                       cx="50%"
                       cy="50%"
                       outerRadius={70}
-                      label={({ name, percent }) =>
-                        `${name}: ${(percent * 100).toFixed(0)}%`
-                      }
+                      label={({ name }) => `${name}`}
                     >
                       {completionPie.map((entry, idx) => (
                         <Cell
