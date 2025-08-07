@@ -48,10 +48,9 @@ const FloatSidebar = () => {
           }`}
         >
           {Items.map((Item) => (
-            <>
+            <div key={Item.id}>
               {isOpen && (
                 <div
-                  key={Item.id}
                   onClick={() => {
                     setActiveTab(Item.id);
                     router.push(Item.link);
@@ -66,7 +65,7 @@ const FloatSidebar = () => {
                   <p>{Item.name}</p>
                 </div>
               )}
-            </>
+            </div>
           ))}
         </div>
         {isOpen && (

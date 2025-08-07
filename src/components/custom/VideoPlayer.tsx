@@ -1,30 +1,30 @@
 "use client";
+import { useAppSelector } from "@/app/hooks";
 import React, { useRef, useState, useEffect } from "react";
 import { FaPlay, FaPause, FaExpand, FaCompress } from "react-icons/fa";
 import { FiChevronsRight, FiChevronsLeft } from "react-icons/fi";
+import VideoPlaceholder from "./VideoPlaceholder";
 
-const videoList = [
-  "https://res.cloudinary.com/djvzuulj2/video/upload/v1753642652/samples/cld-sample-video.mp4",
-  "https://res.cloudinary.com/djvzuulj2/video/upload/v1753642650/samples/elephants.mp4",
-  "https://res.cloudinary.com/djvzuulj2/video/upload/v1753642650/samples/sea-turtle.mp4",
-  "/02.mp4",
-  "/03.mp4",
-  "/04.mp4",
-];
 const speeds = [0.5, 0.75, 1, 1.5, 2.0, 2.5, 3];
 
+interface SourceProps {
+  currentVideoIndex: number;
+  setCurrentVideoIndex: (val: number) => void;
+}
 
-
-const VideoPlayer = () => {
+const VideoPlayer = ({
+  currentVideoIndex,
+  setCurrentVideoIndex,
+}: SourceProps) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
   const [speedIndex, setSpeedIndex] = useState(2);
   const [hovered, setHovered] = useState(false);
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const { loading, modules } = useAppSelector((state) => state.modules);
 
   const [showCountdown, setShowCountdown] = useState(false);
   const [countdown, setCountdown] = useState(10);
@@ -49,13 +49,12 @@ const VideoPlayer = () => {
   };
 
   const goToPrevious = () => {
-    const prevIndex =
-      (currentVideoIndex - 1 + videoList.length) % videoList.length;
+    const prevIndex = (currentVideoIndex - 1 + modules.length) % modules.length;
     setCurrentVideoIndex(prevIndex);
   };
 
   const goToNext = () => {
-    const nextIndex = (currentVideoIndex + 1) % videoList.length;
+    const nextIndex = (currentVideoIndex + 1) % modules.length;
     setCurrentVideoIndex(nextIndex);
   };
 
@@ -154,18 +153,26 @@ const VideoPlayer = () => {
       className="w-full max-w-4xl rounded-lg overflow-hidden shadow-lg relative cursor-pointer transition duration-300 delay-75"
       onClick={togglePlayPause}
     >
-      <video
-        ref={videoRef}
-        src={videoList[currentVideoIndex]}
-        className="w-full h-full object-contain rounded-xl border border-purple-600"
-        onEnded={() => {
-          setShowCountdown(true);
-          setCountdown(10);
-        }}
-        onPlay={() => setIsPlaying(true)}
-        onPause={() => setIsPlaying(false)}
-        controls={false}
-      />
+      <div className="w-full h-full object-contain rounded-xl border border-purple-600">
+        {loading ? (
+          <VideoPlaceholder />
+        ) : modules.length > 0 ? (
+          <video
+            ref={videoRef}
+            src={modules[currentVideoIndex].video}
+            className="w-full h-full object-contain rounded-xl border border-purple-600"
+            onEnded={() => {
+              setShowCountdown(true);
+              setCountdown(10);
+            }}
+            onPlay={() => setIsPlaying(true)}
+            onPause={() => setIsPlaying(false)}
+            controls={false}
+          />
+        ) : (
+          <div className="w-full h-60 sm:h-92 lg:h-[450px]" />
+        )}
+      </div>
 
       {/* play pause button  */}
       {(hovered || !isPlaying) && (
@@ -174,7 +181,7 @@ const VideoPlayer = () => {
             e.stopPropagation();
             togglePlayPause();
           }}
-          className="absolute inset-0 flex items-center justify-center text-white bg-opacity-30 hover:bg-opacity-50 transition rounded-xl"
+          className="absolute inset-0 z-40 flex items-center justify-center text-white bg-opacity-30 hover:bg-opacity-50 transition rounded-xl"
           aria-label={!isPlaying ? "Pause video" : "Play video"}
         >
           {isPlaying ? (
@@ -198,7 +205,7 @@ const VideoPlayer = () => {
 
       {hovered && (
         <div className="w-full bg-black flex items-center justify-center">
-          <div className="w-[98%] flex flex-col gap-2 px-2 sm:px-4 py-2 text-white absolute bottom-1 z-40 backdrop-blur-2xl rounded-lg transition duration-300 delay-75">
+          <div className="w-[98%] flex flex-col gap-2 px-2 sm:px-4 py-2 text-white absolute bottom-1 z-50 backdrop-blur-2xl rounded-lg transition duration-300 delay-75">
             <div className="flex justify-between items-center">
               {/* previous next button  */}
               <div className="flex items-center gap-2 sm:gap-4">
@@ -208,7 +215,7 @@ const VideoPlayer = () => {
                     goToPrevious();
                   }}
                   title="Previous"
-                  className="cursor-pointer text-base sm:text-xl hover:scale-110 active:ring active:ring-purple-500 transition"
+                  className="cursor-pointer text-base text-purple-700 sm:text-xl hover:scale-110 active:ring active:ring-purple-500 transition"
                 >
                   <FiChevronsLeft />
                 </div>
@@ -218,7 +225,7 @@ const VideoPlayer = () => {
                     goToNext();
                   }}
                   title="Next"
-                  className="cursor-pointer text-base sm:text-xl hover:scale-110 active:ring active:ring-purple-500 transition"
+                  className="cursor-pointer text-base  text-purple-700  sm:text-xl hover:scale-110 active:ring active:ring-purple-500 transition"
                 >
                   <FiChevronsRight />
                 </div>
@@ -249,7 +256,7 @@ const VideoPlayer = () => {
                       speedIndex === 0
                         ? "opacity-40 cursor-not-allowed"
                         : "hover:bg-purple-500/30"
-                    }`}
+                    } cursor-pointer`}
                   >
                     −
                   </button>
@@ -266,7 +273,7 @@ const VideoPlayer = () => {
                       speedIndex === 0
                         ? "opacity-40 cursor-not-allowed"
                         : "hover:bg-purple-500/30"
-                    }`}
+                    } cursor-pointer`}
                   >
                     +
                   </button>

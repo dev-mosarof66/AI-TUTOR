@@ -127,10 +127,10 @@ const AuthForm = () => {
           >
             <>
               <FcGoogle size={20} />
-              <span className="flex items-center gap-1">
+              <div className="flex items-center gap-1">
                 {activeTab === "signin" ? "Sign in" : "Sign up"}{" "}
-                <span className="hidden sm:block"> with Google</span>
-              </span>
+                <p className="hidden sm:block"> with Google</p>
+              </div>
             </>
           </Button>
         </div>

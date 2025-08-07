@@ -94,6 +94,7 @@ export const POST = async (
         }
 
         await existedPlaylist.modules.push(newModule._id)
+        existedPlaylist.duration += newModule.duration;
 
         await existedPlaylist.save({
             validateBeforeSave: false,

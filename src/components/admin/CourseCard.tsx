@@ -49,7 +49,7 @@ const CourseCard = ({ courses }: Prop) => {
       <div className="w-full">
         {courses.length === 0 ? (
           <p className="text-center text-gray-500 py-10">
-            No courses available.
+            No playlists available.
           </p>
         ) : (
           <div className="w-full my-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -103,10 +103,10 @@ const CourseCard = ({ courses }: Prop) => {
                         <span className="ml-1">
                           {course.duration != null ? (
                             <span className="text-xs">
-                              {hours}h : {minutes}m
+                              {hours === 0 ? "" : hours + " h : "} {minutes}m
                             </span>
                           ) : (
-                            "N/A"
+                            "0"
                           )}
                         </span>
                       </div>

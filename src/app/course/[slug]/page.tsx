@@ -5,36 +5,47 @@ import { changeTheme } from "@/features/theme/themeSlice";
 import VideoPlayer from "@/components/custom/VideoPlayer";
 import CourseDescription from "@/components/custom/CourseDescription";
 import { MdKeyboardArrowUp } from "react-icons/md";
-import { webDevPlaylist } from "@/data";
 import Playlist from "@/components/custom/Playlist";
 import { useParams } from "next/navigation";
-
-interface PlaylistType {
-  title: string;
-  duration: number | string;
-  link: string;
-}
+import { getAllModules } from "@/features/moudles/modules";
 
 const CourseLayout = () => {
-  const params =  useParams<{slug:string}>()
-  console.log(params?.slug)
+  const params = useParams<{ slug: string }>();
+  const playlistId = params?.slug;
+  const { modules, loading } = useAppSelector((state) => state.modules);
+  const { playlists } = useAppSelector((state) => state.playlists);
   const isDarkMode = useAppSelector((state) => state.theme.theme);
   const dispatch = useAppDispatch();
   const [fullPlaylist, setFullPlaylist] = useState(false);
-  const [runningVideo, setRunningVideo] = useState<PlaylistType>(webDevPlaylist[0]);
+  const [currentVideoIndex, setCurrentVideoIndex] = useState<number>(0);
+
+  console.log(modules);
+  console.log(playlists);
+
   useEffect(() => {
     const load = localStorage.getItem("p_xyz");
     const theme = load ? JSON.parse(load) : null;
     dispatch(changeTheme(theme));
-  }, [dispatch]);
+    if (playlistId) dispatch(getAllModules(playlistId));
+  }, [dispatch, playlistId]);
+
+  if (loading) {
+    return (
+      <div className="w-full flex items-center justify-center">
+        <span className="loading loading-ring loading-xl text-primary"></span>
+      </div>
+    );
+  }
 
   return (
-    <div>
+    <div className="w-full">
       {/* small screen  */}
-      <div className="flex-1 w-[96%] sm:w-[90%] mx-auto grid grid-cols-1 lg:hidden gap-6 relative">
+      <div className=" w-[96%] sm:w-[90%] mx-auto grid grid-cols-1 lg:hidden gap-6 relative">
         <div className="w-full mx-auto flex items-center justify-center">
-          <VideoPlayer  />
-          {/* <VideoPlayer source={runningVideo.link} /> */}
+          <VideoPlayer
+            currentVideoIndex={currentVideoIndex}
+            setCurrentVideoIndex={setCurrentVideoIndex}
+          />
         </div>
 
         {/* playlist goes here  */}
@@ -53,9 +64,11 @@ const CourseLayout = () => {
                   isDarkMode ? "text-purple-500" : "text-gray-200"
                 }`}
               >
-                {runningVideo.title.length > 30
-                  ? runningVideo.title.slice(0, 30) + "..."
-                  : runningVideo.title}
+                {modules[currentVideoIndex]
+                  ? modules[currentVideoIndex].title.length > 30
+                    ? modules[currentVideoIndex].title.slice(0, 30) + "..."
+                    : modules[currentVideoIndex].title
+                  : ""}
               </h1>
             </div>
             <div
@@ -69,33 +82,43 @@ const CourseLayout = () => {
           {fullPlaylist && (
             <div className="w-[90%]  mx-auto h-96 overflow-y-scroll transition duration-300 delay-75">
               <Playlist
-                data={webDevPlaylist}
-                runningVideo={runningVideo}
-                setRunningVideo={setRunningVideo}
+                data={modules}
+                currentVideoIndex={currentVideoIndex}
+                setCurrentVideoIndex={setCurrentVideoIndex}
               />
             </div>
           )}
         </div>
         <div className="flex flex-col gap-5">
-          <CourseDescription title={runningVideo.title} />
+          <CourseDescription
+            currentVideoIndex={currentVideoIndex}
+            params={params ? params?.slug : null}
+            playlists={playlists}
+          />
         </div>
       </div>
       {/* larger screen */}
-      <div className="flex-1 w-[90%]  mx-auto hidden lg:flex lg:flex-row">
+      <div className=" w-[90%]  mx-auto hidden lg:flex lg:flex-row">
         <div className="w-[70%] grid grid-cols-1 gap-6">
           <div className="w-full">
-            <VideoPlayer  />
-            {/* <VideoPlayer source={runningVideo.link} /> */}
+            <VideoPlayer
+              currentVideoIndex={currentVideoIndex}
+              setCurrentVideoIndex={setCurrentVideoIndex}
+            />
           </div>
           <div className="w-full mx-auto flex flex-col gap-5">
-            <CourseDescription title={runningVideo.title} />
+            <CourseDescription
+              params={params ? params?.slug : null}
+              currentVideoIndex={currentVideoIndex}
+              playlists={playlists}
+            />
           </div>
         </div>
         <div className="flex-1 fixed right-10 w-[28%] h-[80vh] overflow-y-scroll bg-purple-400/20 p-3 rounded-sm shadow shadow-black">
           <Playlist
-            data={webDevPlaylist}
-            runningVideo={runningVideo}
-            setRunningVideo={setRunningVideo}
+            data={modules}
+            currentVideoIndex={currentVideoIndex}
+            setCurrentVideoIndex={setCurrentVideoIndex}
           />
         </div>
       </div>

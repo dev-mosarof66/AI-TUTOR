@@ -15,14 +15,14 @@ const CourseLayout = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <div
-      className={`w-full  min-h-screen   ${
+      className={`w-full   ${
         !isDarkMode
           ? "bg-stone-100 text-gray-600"
           : " bg-gray-800 text-stone-100"
       }`}
     >
       <Header setSearchMode={() => {}} hideSearch={true} />
-      <div className="w-full h-[89vh] sm:h-[88vh] overflow-y-scroll scrollbar-hidden">{children}</div> 
+      <div className="w-full h-[89vh] sm:h-[86vh] overflow-y-scroll scrollbar-hidden">{children}</div> 
     </div>
   );
 };

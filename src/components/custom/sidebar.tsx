@@ -53,7 +53,7 @@ const Sidebar: React.FC<SidebarProps> = ({
           : "bg-white  text-gray-600 border-r-gray-400/50"
       } transition-all   backdrop-blur-2xl`}
     >
-      <div className="h-screen py-6 transition-all duration-200 delay-75 relative">
+      <div className="w-full h-screen py-6 transition-all duration-200 delay-75 relative">
         {/* header  */}
         <div className="w-full flex items-center justify-between px-2">
           <h1
@@ -67,8 +67,8 @@ const Sidebar: React.FC<SidebarProps> = ({
             onClick={() => setIsOpen(!isOpen)}
             className="block xl:hidden p-2 pl-4 hover:bg-gray-500/20 active:bg-gray-500/20 rounded-full active:ring-1 ring-purple-500 cursor-pointer transition duration-300 delay-75 group"
           >
-            {isOpen ? (
-              <Tooltip title="collapse" arrow placement="right">
+            {!isOpen ? (
+              <Tooltip title="expand" arrow placement="right">
                 <GoSidebarCollapse
                   size={19}
                   className={`${
@@ -79,7 +79,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                 />
               </Tooltip>
             ) : (
-              <Tooltip title="expand" arrow placement="right">
+              <Tooltip title="collaps" arrow placement="right">
                 <GoSidebarExpand
                   size={19}
                   className={`${
@@ -95,9 +95,9 @@ const Sidebar: React.FC<SidebarProps> = ({
         <div className="w-full h-[1px] my-4 bg-gray-600/30"></div>
 
         {/* sidebar items goes here  */}
-        <div className="md:h-[70vh] overflow-y-scroll scrollbar-hidden">
+        <div className="md:h-[70vh] w-full overflow-y-scroll scrollbar-hidden">
           <div
-            className={`w-full flex flex-col items-center ${
+            className={`w-full flex flex-col ${
               isOpen ? "gap-3" : "gap-5"
             }`}
           >

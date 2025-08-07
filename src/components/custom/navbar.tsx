@@ -70,7 +70,7 @@ const Navbar = () => {
         )}
         {isCoursesRoute ? (
           <div>
-            <button className="button w-30 px-2 py-1 transition duration-300 delay-75 flex items-center justify-center gap-2 group">
+            <button onClick={()=> router.push('/auth')} className="button w-30 px-2 py-1 transition duration-300 delay-75 flex items-center justify-center gap-2 group">
               <p>Join Now</p>
               <div>
                 <FiChevronsRight className="hidden text-black group-hover:block transition-transform duration-300 delay-75" />
@@ -79,7 +79,7 @@ const Navbar = () => {
           </div>
         ) : (
           <>
-            <div className="hidden sm:block">
+            <div onClick={()=> router.push('/auth')} className="hidden sm:block">
               <button className="button w-30 px-2 py-1 transition duration-300 delay-75 flex items-center justify-center gap-2 group">
                 <p>Join Now</p>
                 <div>

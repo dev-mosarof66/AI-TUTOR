@@ -8,12 +8,17 @@ import { getAllPlaylist } from "@/features/playlist/playlists";
 
 const Courses = () => {
   const dispatch = useAppDispatch();
+
+  const { playlists, loading } = useAppSelector((state) => state.playlists);
+  console.log(playlists);
   useEffect(() => {
     const load = localStorage.getItem("p_xyz");
     const theme = load ? JSON.parse(load) : null;
     dispatch(changeTheme(theme));
-    dispatch(getAllPlaylist())
+    dispatch(getAllPlaylist());
   }, [dispatch]);
+
+
   return (
     <div
       className={`w-[95%] mx-auto  flex flex-col items-center justify-center`}
@@ -22,7 +27,7 @@ const Courses = () => {
       {/* divider  */}
       <div className={`w-full bg-gray-500 h-[1px] my-4`}></div>
       {/* courses  */}
-      <CourseContent />
+      <CourseContent playlists={playlists} loading={loading} />
     </div>
   );
 };
