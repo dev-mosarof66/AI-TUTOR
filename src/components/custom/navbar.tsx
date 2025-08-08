@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaBarsStaggered } from "react-icons/fa6";
 import { motion } from "framer-motion";
 import "../../css/navbar.css";
@@ -42,11 +42,29 @@ const Navbar = () => {
     setActiveNav(item);
     router.push(navigation);
   };
+
+  useEffect(() => {
+    const handleNavigation = () => {
+      if (location === "/pricing") {
+        setActiveNav(2);
+      } else if (location === "/docs") {
+        setActiveNav(3);
+      } else if (location === "/") {
+        setActiveNav(1);
+      }
+    };
+
+    handleNavigation();
+  }, [location]);
+
   return (
     <nav className="w-full fixed top-0 right-0 left-0 z-50 flex flex-col items-center justify-center text-gray-200  backdrop-blur-3xl">
       <div className="w-full max-w-7xl mx-auto flex items-center justify-between px-8 sm:px-10 backdrop-blur-3xl py-6 rounded-md">
         <div>
-          <p className="font-semibold text-base sm:text-lg md:text-xl text-purple-500">
+          <p
+            onClick={() => router.push("/")}
+            className="font-semibold text-xl sm:text-lg md:text-xl text-purple-500 cursor-pointer hover:text-purple-600 transition duration-300 delay-75"
+          >
             Neura
           </p>
         </div>
@@ -70,7 +88,10 @@ const Navbar = () => {
         )}
         {isCoursesRoute ? (
           <div>
-            <button onClick={()=> router.push('/auth')} className="button w-30 px-2 py-1 transition duration-300 delay-75 flex items-center justify-center gap-2 group">
+            <button
+              onClick={() => router.push("/auth")}
+              className="button w-30 px-2 py-1 transition duration-300 delay-75 flex items-center justify-center gap-2 group"
+            >
               <p>Join Now</p>
               <div>
                 <FiChevronsRight className="hidden text-black group-hover:block transition-transform duration-300 delay-75" />
@@ -79,7 +100,10 @@ const Navbar = () => {
           </div>
         ) : (
           <>
-            <div onClick={()=> router.push('/auth')} className="hidden sm:block">
+            <div
+              onClick={() => router.push("/auth")}
+              className="hidden sm:block"
+            >
               <button className="button w-30 px-2 py-1 transition duration-300 delay-75 flex items-center justify-center gap-2 group">
                 <p>Join Now</p>
                 <div>
@@ -103,7 +127,7 @@ const Navbar = () => {
         )}
       </div>
       {!isCoursesRoute && (
-        <div className="w-full flex sm:hidden items-center justify-center fixed filter backdrop-blur-3xl top-16 gap-2 transition-transform duration-500 delay-100">
+        <div className="w-full  flex sm:hidden items-center justify-center fixed filter backdrop-blur-3xl top-16 gap-2 transition-transform duration-500 delay-100">
           {showNavbarContent && (
             <motion.ul
               initial={{ x: -500 }}
@@ -111,29 +135,55 @@ const Navbar = () => {
               transition={{
                 duration: 0.5,
               }}
-              className="w-[80%] mx-auto flex flex-col gap-3 text-sm xs:text-base"
+              className="w-full mx-auto flex flex-col gap-3 text-sm  xs:text-base py-6 filter backdrop-blur-2xl"
             >
-              <div className="w-full bg-[#18365593] rounded-md text-center hover:bg-[#183655bd] active:bg-[#183655bd] hover:text-green-700 active:text-green-700 py-1 cursor-pointer transition duration-300 delay-75">
-                Home
+              <div className="w-[80%] mx-auto flex flex-col gap-3 text-sm xs:text-base">
+                <div
+                  onClick={() => {
+                    router.push("/");
+                    setShowNavbarContent(false);
+                  }}
+                  className="w-full bg-[#18365593] rounded-md text-center hover:bg-[#183655bd] active:bg-[#183655bd] hover:text-green-700 active:text-green-700 py-1 cursor-pointer transition duration-300 delay-75"
+                >
+                  Home
+                </div>
+                <div
+                  onClick={() => {
+                    router.push("/pricing");
+                    setShowNavbarContent(false);
+                  }}
+                  className="w-full bg-[#18365593] rounded-md text-center hover:bg-[#183655bd] active:bg-[#183655bd] hover:text-green-700 active:text-green-700 py-1 cursor-pointer transition duration-300 delay-75"
+                >
+                  Pricing
+                </div>
+                <div
+                  onClick={() => {
+                    router.push("/blogs");
+                    setShowNavbarContent(false);
+                  }}
+                  className="w-full bg-[#18365593] rounded-md text-center hover:bg-[#183655bd] active:bg-[#183655bd] hover:text-green-700 active:text-green-700 py-1 cursor-pointer transition duration-300 delay-75"
+                >
+                  Blogs
+                </div>
+                <div
+                  onClick={() => {
+                    router.push("/courses");
+                    setShowNavbarContent(false);
+                  }}
+                  className="w-full bg-[#18365593] rounded-md text-center hover:bg-[#183655bd] active:bg-[#183655bd] hover:text-green-700 active:text-green-700 py-1 cursor-pointer transition duration-300 delay-75"
+                >
+                  Courses
+                </div>
+                <button
+                  onClick={() => {
+                    router.push("/auth");
+                    setShowNavbarContent(false);
+                  }}
+                  className="button w-full px-6 py-1 transition duration-300 delay-75 flex items-center justify-center gap-2 group"
+                >
+                  <p>Join Now</p>
+                </button>
               </div>
-              <div
-                onClick={() => {
-                  router.push("/courses");
-                  setShowNavbarContent(false);
-                }}
-                className="w-full bg-[#18365593] rounded-md text-center hover:bg-[#183655bd] active:bg-[#183655bd] hover:text-green-700 active:text-green-700 py-1 cursor-pointer transition duration-300 delay-75"
-              >
-                Courses
-              </div>
-              <div className="w-full bg-[#18365593] rounded-md text-center hover:bg-[#183655bd] active:bg-[#183655bd] hover:text-green-700 active:text-green-700 py-1 cursor-pointer transition duration-300 delay-75">
-                Pricing
-              </div>
-              <div className="w-full bg-[#18365593] rounded-md text-center hover:bg-[#183655bd] active:bg-[#183655bd] hover:text-green-700 active:text-green-700 py-1 cursor-pointer transition duration-300 delay-75">
-                Blogs
-              </div>
-              <button className="button w-full px-6 py-1 transition duration-300 delay-75 flex items-center justify-center gap-2 group">
-                <p>Join Now</p>
-              </button>
             </motion.ul>
           )}
         </div>
