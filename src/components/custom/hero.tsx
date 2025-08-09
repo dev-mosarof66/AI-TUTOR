@@ -13,7 +13,7 @@ const hero = () => {
     >
       <div className="w-full">
         <div className="grid grid-cols-1  gap-3">
-          <h1 className="w-[80%] mx-auto xs:w-[70%] sm:w-sm md:w-lg text-center text-4xl xs:text-6xl sm:text-6xl md:text-8xl text-transparent bg-clip-text bg-gradient-to-br from-purple-900 via-green-400  to-purple-700">
+          <h1 className="w-[80%] mx-auto xs:w-[70%] sm:w-sm md:w-md text-center text-4xl xs:text-6xl sm:text-6xl md:text-8xl text-transparent bg-clip-text bg-gradient-to-br from-purple-900 via-green-400  to-purple-700 py-4">
             Introducing to Neura
           </h1>
           <p className="text-gray-400 font-semibold xs:text-lg sm:text-lg text-center md:text-xl">
