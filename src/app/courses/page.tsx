@@ -10,14 +10,12 @@ const Courses = () => {
   const dispatch = useAppDispatch();
 
   const { playlists, loading } = useAppSelector((state) => state.playlists);
-  console.log(playlists);
   useEffect(() => {
     const load = localStorage.getItem("p_xyz");
     const theme = load ? JSON.parse(load) : null;
     dispatch(changeTheme(theme));
     dispatch(getAllPlaylist());
   }, [dispatch]);
-
 
   return (
     <div

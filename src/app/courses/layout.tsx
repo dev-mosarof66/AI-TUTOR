@@ -8,6 +8,9 @@ import { useAppDispatch, useAppSelector } from "../hooks";
 import { changeTheme } from "@/features/theme/themeSlice";
 import Header from "@/components/custom/Header";
 import Search from "@/components/custom/Search";
+import { checkUserAuth } from "@/features/user/userSlice";
+import { FaUserAlt } from "react-icons/fa";
+
 
 interface Type {
   children: React.ReactNode;
@@ -32,17 +35,23 @@ const Items = [
     Icon: () => <FaFire size={20} />,
     link: "/courses/my-courses",
   },
+  {
+    id: 4,
+    name: "Profile",
+    Icon: () => <FaUserAlt size={20} />,
+    link: "/profile",
+  },
 ];
 
 const CourseLayout = ({ children }: Type) => {
   const isDarkMode = useAppSelector((state) => state.theme.theme);
   const [searchMode, setSearchMode] = useState(false);
   const dispatch = useAppDispatch();
-  console.log("isDarkMode in course", isDarkMode);
   useEffect(() => {
     const load = localStorage.getItem("p_xyz");
     const theme = load ? JSON.parse(load) : null;
     dispatch(changeTheme(theme));
+    dispatch(checkUserAuth());
   }, [dispatch]);
   return (
     <div
@@ -52,7 +61,7 @@ const CourseLayout = ({ children }: Type) => {
     >
       <Sidebar items={Items} isDarkMode={isDarkMode} />
       <div className="w-[95%] mx-auto sm:w-[90%] h-screen ">
-          <Header setSearchMode={setSearchMode} hideSearch={false} />
+        <Header setSearchMode={setSearchMode} hideSearch={false} />
         <div className="w-full h-[88vh] md:h-[86vh] pt-10 md:pt-4 overflow-y-scroll scrollbar-hidden">
           {children}
         </div>

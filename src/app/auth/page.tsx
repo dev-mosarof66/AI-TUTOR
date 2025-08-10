@@ -1,44 +1,107 @@
 "use client";
-import React, { useState } from "react";
-import { useAppSelector } from "../hooks";
+import React, { useEffect, useState } from "react";
+import { useAppDispatch, useAppSelector } from "../hooks";
 import { Button } from "@mui/material";
 import { FcGoogle } from "react-icons/fc";
+import { FaEye, FaEyeSlash } from "react-icons/fa6";
+import {
+  handleEmailLogin,
+  handleEmailSignup,
+  handleGoogleLogin,
+} from "@/helper/handleGoogleOauth";
+import axios from "axios";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
+import { checkUserAuth } from "@/features/user/userSlice";
 
 const AuthForm = () => {
+  const router = useRouter();
+  const dispatch = useAppDispatch();
   const isDarkMode = useAppSelector((state) => state.theme.theme);
+  const { user, loading } = useAppSelector((state) => state.user);
   const [activeTab, setActiveTab] = useState<"signin" | "signup">("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState({
+    password: false,
+  });
 
-  // const handleSubmit = async (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //   setError("");
-  //   setLoading(true);
-  //   try {
-  //     if (activeTab === "signin") {
-  //       await signInWithEmailAndPassword(auth, email, password);
-  //     } else {
-  //       await createUserWithEmailAndPassword(auth, email, password);
-  //     }
-  //   } catch (err: any) {
-  //     setError(err.message);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
+  const handleOuthButton = async () => {
+    try {
+      const user = await handleGoogleLogin();
+      if (user) {
+        await axios.post("/api/auth", {
+          email: user.email,
+        });
+        toast.success(`Welcome ${user.displayName || "back"}!`, {
+          position: "top-right",
+        });
+        router.push("/courses");
+      }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      console.log("error in handle google login : ", error);
+    }
+  };
+  const handleOuth = async () => {
+    const userData = {
+      email,
+      password,
+    };
+    let user;
+    try {
+      if (activeTab === "signin") {
+        user = await handleEmailLogin(userData);
+        if (user) {
+          toast.success(`Welcome back!`, {
+            position: "top-right",
+          });
+          router.push("/courses");
+        }
+      } else {
+        user = await handleEmailSignup(userData);
 
-  // const handleGoogleLogin = async () => {
-  //   try {
-  //     setLoading(true);
-  //     await signInWithPopup(auth, googleProvider);
-  //   } catch (err: any) {
-  //     setError(err.message);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
+        if (user) {
+          await axios.post("/api/auth", {
+            email,
+          });
+          toast.success(`Welcome back!`, {
+            position: "top-right",
+          });
+          router.push("/courses");
+        }
+      }
+    } catch (error) {
+      console.log("error in auth frontend: ", error);
+    }
+  };
+
+  //retrieve the user info
+
+  useEffect(() => {
+    dispatch(checkUserAuth());
+
+    if (user) {
+      router.push("/courses");
+    } else {
+      router.push("/auth");
+    }
+  }, [dispatch, router, user]);
+
+  if (loading) {
+    return (
+      <div
+        className={`w-full h-screen flex flex-col items-center justify-center ${
+          isDarkMode ? "bg-gray-800" : "bg-gray-300"
+        }`}
+      >
+        <span className="loading loading-ring loading-xl"></span>
+        <p className="w-full text-center my-4 text-purple-600">
+          Fetching user data...
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -47,6 +110,7 @@ const AuthForm = () => {
       }`}
     >
       <div className="w-[90%] max-w-md mx-auto mt-10 p-6 bg-green-400/10 rounded-lg shadow-xl shadow-purple-400/20 backdrop-blur-sm">
+        {/* tabs  */}
         <div className="flex mb-4">
           <div
             onClick={() => setActiveTab("signin")}
@@ -74,9 +138,8 @@ const AuthForm = () => {
           </div>
         </div>
 
-        <form className="space-y-4">
-          {error && <p className="text-red-500 text-sm">{error}</p>}
-
+        {/* form  */}
+        <form className="space-y-6 my-6">
           <input
             type="email"
             placeholder="johndoe@gmail.com"
@@ -90,18 +153,43 @@ const AuthForm = () => {
             required
           />
 
-          <input
-            type="password"
-            placeholder="Choose a strong password"
-            className={`w-full px-3 py-2 border-none outline-none ring ${
-              isDarkMode
-                ? "ring-purple-300/30 placeholder:text-gray-400 text-gray-400"
-                : "ring-purple-400/60 placeholder:text-gray-500 text-gray-700"
-            } focus:ring-purple-500 rounded `}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+          <div className="relative">
+            <input
+              type={showPassword.password ? "text" : "password"}
+              placeholder="Choose password"
+              className={`w-full px-3 py-2 border-none outline-none ring ${
+                isDarkMode
+                  ? "ring-purple-300/30 placeholder:text-gray-400 text-gray-400"
+                  : "ring-purple-400/60 placeholder:text-gray-500 text-gray-700"
+              } focus:ring-purple-500 rounded `}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <div>
+              {showPassword.password ? (
+                <FaEyeSlash
+                  onClick={() =>
+                    setShowPassword((prev) => ({
+                      ...prev,
+                      password: !prev.password,
+                    }))
+                  }
+                  className="absolute top-3 right-4 text-gray-600 hover:text-gray-600/60 active:text-gray-600/70 cursor-pointer transition duration-300 delay-75"
+                />
+              ) : (
+                <FaEye
+                  onClick={() =>
+                    setShowPassword((prev) => ({
+                      ...prev,
+                      password: !prev.password,
+                    }))
+                  }
+                  className="absolute top-3 right-4 text-gray-600 hover:text-gray-600/60 active:text-gray-600/70 cursor-pointer transition duration-300 delay-75"
+                />
+              )}
+            </div>
+          </div>
 
           <Button
             type="submit"
@@ -123,6 +211,7 @@ const AuthForm = () => {
             variant="outlined"
             disabled={loading}
             color="secondary"
+            onClick={handleOuthButton}
             className="w-full border flex items-center justify-center gap-2 py-2 rounded hover:bg-gray-100"
           >
             <>

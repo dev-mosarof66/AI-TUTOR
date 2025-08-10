@@ -1,11 +1,14 @@
+"use client";
 import React from "react";
 import { FiChevronsRight } from "react-icons/fi";
 import { FaCrown } from "react-icons/fa6";
 
 import "../../css/hero.css";
 import Button from "./button";
+import { useRouter } from "next/navigation";
 
-const hero = () => {
+const Hero = () => {
+  const router = useRouter();
   return (
     <div
       id="hero"
@@ -21,7 +24,7 @@ const hero = () => {
           </p>
         </div>
         <div className="w-full sm:w-sm md:w-md mx-auto flex flex-col items-center justify-center sm:flex sm:flex-row sm:justify-around   gap-6 py-6">
-          <Button isNav={false}>
+          <Button onClick={() => router.push("/courses")} isNav={false}>
             <>
               <FaCrown className="translate-x-0 group-hover:translate-x-11 group-active:translate-x-11  group-hover:text-black group-active:text-black group-hover:text-xl transition-all duration-500 delay-100" />
               <p className="group-hover:opacity-0 group-active:opacity-0 transition-all duration-700 delay-75">
@@ -29,7 +32,7 @@ const hero = () => {
               </p>
             </>
           </Button>
-          <Button isNav={false}>
+          <Button onClick={() => router.push("/auth")} isNav={false}>
             <>
               <FiChevronsRight className="translate-x-0 group-hover:translate-x-11 group-active:translate-x-11  group-hover:text-black group-active:text-black group-hover:text-xl transition-all duration-500 delay-100" />
               <p className="group-hover:opacity-0 group-active:opacity-0 transition-all duration-700 delay-75">
@@ -43,4 +46,4 @@ const hero = () => {
   );
 };
 
-export default hero;
+export default Hero;

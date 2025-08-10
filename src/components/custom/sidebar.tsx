@@ -5,6 +5,8 @@ import "../../css/sidebar.css";
 import { GoSidebarExpand, GoSidebarCollapse } from "react-icons/go";
 import { LuLogIn, LuArrowBigUpDash } from "react-icons/lu";
 import { useRouter } from "next/navigation";
+import { useAppSelector } from "@/app/hooks";
+import { MdOutlineLogout } from "react-icons/md";
 
 interface SidebarItem {
   id: number;
@@ -27,7 +29,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(true);
   const [activeTab, setActiveTab] = useState(1);
-  const user = false;
+  const { user } = useAppSelector((state) => state.user);
 
   useEffect(() => {
     const resizeWindow = () => {
@@ -96,11 +98,7 @@ const Sidebar: React.FC<SidebarProps> = ({
 
         {/* sidebar items goes here  */}
         <div className="md:h-[70vh] w-full overflow-y-scroll scrollbar-hidden">
-          <div
-            className={`w-full flex flex-col ${
-              isOpen ? "gap-3" : "gap-5"
-            }`}
-          >
+          <div className={`w-full flex flex-col ${isOpen ? "gap-3" : "gap-5"}`}>
             {items.map((Item, index) => (
               <div key={index}>
                 {!isOpen ? (
@@ -174,7 +172,17 @@ const Sidebar: React.FC<SidebarProps> = ({
             </div>
             <div className="w-full flex items-center justify-center">
               {user ? (
-                <div></div>
+                <Button
+                  onClick={() => router.push("/profile")}
+                  component="label"
+                  className={`${isOpen ? "w-[80%]" : "px-2"}`}
+                  role={undefined}
+                  variant="contained"
+                  tabIndex={-1}
+                  startIcon={<MdOutlineLogout size={16} />}
+                >
+                  <p className={`${isOpen ? "block" : "hidden"}`}> Logout</p>
+                </Button>
               ) : (
                 <Button
                   onClick={() => router.push("/auth")}

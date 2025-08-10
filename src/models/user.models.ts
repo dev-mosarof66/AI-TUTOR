@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose';
+import mongoose, { Schema, model } from 'mongoose';
 
 const planSchema = new Schema({
     title: { type: String, default: null },
@@ -10,9 +10,7 @@ const planSchema = new Schema({
 }, { timestamps: true });
 
 const UserSchema = new Schema({
-    username: { type: String, required: true, unique: true },
     email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
     currentPlan: { type: String, default: null },
     plans: [planSchema],
 
@@ -26,5 +24,5 @@ const UserSchema = new Schema({
     timestamps: true
 });
 
-const User = model('User', UserSchema);
+const User = mongoose.models.User || model('User', UserSchema);
 export default User;
