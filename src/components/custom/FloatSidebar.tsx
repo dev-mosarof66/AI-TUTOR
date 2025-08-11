@@ -5,9 +5,10 @@ import "../../css/sidebar.css";
 import { useRouter } from "next/navigation";
 import { FaBars } from "react-icons/fa6";
 import { FaStar, FaFire } from "react-icons/fa";
-import { MdHome } from "react-icons/md";
+import { MdHome, MdOutlineLogout } from "react-icons/md";
 import { useAppSelector } from "@/app/hooks";
 import { LuArrowBigUpDash, LuLogIn } from "react-icons/lu";
+import { FaUser } from "react-icons/fa";
 
 const Items = [
   {
@@ -28,13 +29,19 @@ const Items = [
     Icon: () => <FaFire size={20} />,
     link: "/courses/my-courses",
   },
+  {
+    id: 4,
+    name: "Profile",
+    Icon: () => <FaUser  size={20} />,
+    link: "/profile",
+  },
 ];
 const FloatSidebar = () => {
   const router = useRouter();
   const isDarkMode = useAppSelector((state) => state.theme.theme);
   const [isOpen, setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState(1);
-  const user = false;
+  const { user } = useAppSelector((state) => state.user);
 
   return (
     <div className="block md:hidden">
@@ -48,7 +55,7 @@ const FloatSidebar = () => {
           }`}
         >
           {Items.map((Item) => (
-            <div key={Item.id}>
+            <div key={Item.id} className="w-full">
               {isOpen && (
                 <div
                   onClick={() => {
@@ -88,7 +95,20 @@ const FloatSidebar = () => {
                 </div>
                 <div className="w-full flex items-center justify-center">
                   {user ? (
-                    <div></div>
+                    <Button
+                      onClick={() => router.push("/profile")}
+                      component="label"
+                      className={`${isOpen ? "w-[80%]" : "px-2"}`}
+                      role={undefined}
+                      variant="contained"
+                      tabIndex={-1}
+                      startIcon={<MdOutlineLogout size={16} />}
+                    >
+                      <p className={`${isOpen ? "block" : "hidden"}`}>
+                        {" "}
+                        Logout
+                      </p>
+                    </Button>
                   ) : (
                     <Button
                       onClick={() => router.push("/auth")}
