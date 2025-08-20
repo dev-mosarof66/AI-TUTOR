@@ -160,6 +160,7 @@ const Sidebar: React.FC<SidebarProps> = ({
           <div className="w-full flex flex-col items-center justify-center gap-3">
             <div className="w-full flex items-center justify-center">
               <Button
+                onClick={() => router.push("/pricing")}
                 component="label"
                 className={`${isOpen ? "w-[80%]" : "px-2"}`}
                 role={undefined}
@@ -181,7 +182,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                   tabIndex={-1}
                   startIcon={<MdOutlineLogout size={16} />}
                 >
-                  <p className={`${isOpen ? "block" : "hidden"}`}> Logout</p>
+                  <p className={`${isOpen ? "block" : "hidden"}`}>Logout</p>
                 </Button>
               ) : (
                 <Button

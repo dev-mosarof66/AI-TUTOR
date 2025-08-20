@@ -26,3 +26,25 @@
     animation: gradientMove 8s ease infinite;
   }
 }
+
+
+.button {
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  position: relative;
+  overflow: hidden;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  color: rgba(0, 0, 0, 0.767);
+  background: rgba(193, 228, 248, 0.748);
+  z-index: 0;
+  box-shadow: 0 0px 7px -5px rgba(0, 0, 0, 0.5);
+  transition: all 1s .01s;
+}
+
+.button:hover {
+  background: rgb(193, 228, 248);
+  color: rgb(33, 0, 85);
+}

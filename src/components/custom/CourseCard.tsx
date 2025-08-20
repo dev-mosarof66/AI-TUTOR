@@ -17,6 +17,15 @@ interface Props {
   loading: boolean;
 }
 
+
+//  title: "Advanced Python Scripting",
+//     description: "Automate workflows and processes with advanced Python scripting.",
+//     category: "Python",
+//     level: "advance",
+//     duration: "9h",
+//     modules: 21,
+//     popular: false,
+
 const CourseCard = ({ courses, loading }: Props) => {
   const isDarkMode = useAppSelector((state) => state.theme.theme);
   const router = useRouter();
@@ -24,7 +33,6 @@ const CourseCard = ({ courses, loading }: Props) => {
   const subTextColor = isDarkMode ? "text-gray-400" : "text-gray-600";
   const cardBg = isDarkMode ? "bg-purple-800/20" : "bg-purple-400/30";
   const iconColor = isDarkMode ? "text-purple-300" : "text-purple-700";
-  console.log(courses);
 
   return (
     <div className="w-full">
@@ -70,27 +78,26 @@ const CourseCard = ({ courses, loading }: Props) => {
                       ) : (
                         <FaSquare className="text-red-500" />
                       )}
-                      <span className="hidden xs:inline">
-                        {/* {course.level.toUpperCase()} */}
-                      </span>
                     </div>
 
                     {/* Duration */}
                     <div className={`flex items-center gap-1 ${iconColor}`}>
                       <FaHourglassStart /> 
-                      {course.duration != null ? (
+                      {course.duration}
+                      {/* {course.duration != null ? (
                         <span className="text-sm">
                           {hours === 0 ? "" : hours + " h : "} {minutes}m
                         </span>
                       ) : (
                         "0"
-                      )}
+                      )} */}
                     </div>
 
                     {/* Lessons */}
                     <div className={`flex items-center gap-1 ${iconColor}`}>
                       <MdOutlineDiscount />
-                      <span>{course.modules.length}</span>
+                      <span>{course.modules}</span>
+                      {/* <span>{course.modules.length}</span> */}
                     </div>
                   </div>
                   <Button

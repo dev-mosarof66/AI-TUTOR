@@ -47,12 +47,25 @@ interface PlaylistsProps {
 
 const CourseContent = ({ playlists, loading }: PlaylistsProps) => {
   const [selectedTab, setSelectedTab] = useState(0);
+  const [courses, setCourses] = useState(playlists);
+  const filterCourses = (category: string, id: number) => {
+    setSelectedTab(id);
+    console.log(category);
+    if (category.toUpperCase() === "ALL") {
+      console.log("inside all");
+      setCourses(playlists);
+    } else {
+      const courses = playlists.filter((t) => category === t.category);
+      console.log(courses);
+      setCourses(courses);
+    }
+  };
   return (
     <div className="w-full">
       <div className="w-full md:w-[580px] xl:w-full flex items-center gap-2 overflow-x-scroll scrollbar-hidden">
         {Tabs.map((tab) => (
           <div
-            onClick={() => setSelectedTab(tab.id)}
+            onClick={() => filterCourses(tab.name, tab.id)}
             key={tab.id}
             className={`${
               selectedTab === tab.id && "bg-purple-500/30"
@@ -68,7 +81,7 @@ const CourseContent = ({ playlists, loading }: PlaylistsProps) => {
         ))}
       </div>
       <div>
-        <CourseCard courses={playlists} loading={loading} />
+        <CourseCard courses={courses} loading={loading} />
       </div>
     </div>
   );

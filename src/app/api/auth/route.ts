@@ -17,15 +17,6 @@ export const POST = async (req: NextRequest) => {
                 { status: 400 }
             );
         }
-
-        const existedUser = await User.findOne({ email });
-        if (existedUser) {
-            return NextResponse.json(
-                { message: "User with this email already exists", data: null },
-                { status: 409 }
-            );
-        }
-
         const user = await User.create({ email });
         if (!user) {
             return NextResponse.json(
@@ -50,7 +41,7 @@ export const POST = async (req: NextRequest) => {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
             sameSite: "strict",
-            maxAge: 30 * 24 * 60 * 60, // 30 days
+            maxAge: 30 * 24 * 60 * 60, 
             path: "/"
         });
 
@@ -67,6 +58,7 @@ export const POST = async (req: NextRequest) => {
 export const GET = async (req: NextRequest) => {
     try {
         const token = req.cookies.get("token")?.value;
+        console.log(token)
         if (!token) {
             return NextResponse.json(
                 { message: "Login session expired.", data: null },
@@ -76,6 +68,15 @@ export const GET = async (req: NextRequest) => {
 
         const secretKey = new TextEncoder().encode(process.env.JWT_SECRET);
         const { payload } = await jose.jwtVerify(token, secretKey);
+
+        if (!payload) {
+            return NextResponse.json(
+                {
+                    message: "Login session expired."
+                },
+                { status: 402 }
+            )
+        }
 
         const user = await User.findById(payload.id);
         console.log("user in /auth : ", user)

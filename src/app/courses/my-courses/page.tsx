@@ -101,7 +101,7 @@ const courses = [
 const MyCourses = () => {
   const router = useRouter();
   return (
-    <div className="w-full h-screen">
+    <div className="w-[96%] mx-auto h-screen">
       {courses.length > 0 ? (
         <CourseCard courses={courses} />
       ) : (

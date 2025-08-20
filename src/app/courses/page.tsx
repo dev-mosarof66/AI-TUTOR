@@ -5,11 +5,12 @@ import { useAppDispatch, useAppSelector } from "../hooks";
 import { changeTheme } from "@/features/theme/themeSlice";
 import CourseContent from "@/components/custom/CourseContent";
 import { getAllPlaylist } from "@/features/playlist/playlists";
+import playlists from "@/../data.js";
 
 const Courses = () => {
   const dispatch = useAppDispatch();
 
-  const { playlists, loading } = useAppSelector((state) => state.playlists);
+  const { loading } = useAppSelector((state) => state.playlists);
   useEffect(() => {
     const load = localStorage.getItem("p_xyz");
     const theme = load ? JSON.parse(load) : null;

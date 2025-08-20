@@ -60,6 +60,7 @@ const userSlice = createSlice({
             })
             .addCase(checkUserAuth.rejected, (state) => {
                 state.user = null;
+                state.loading = false;
             });
     },
 });

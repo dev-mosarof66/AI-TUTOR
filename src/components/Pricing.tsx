@@ -3,8 +3,10 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { FaCheckCircle, FaTimesCircle, FaCrown } from "react-icons/fa";
-import { Button } from "@mui/material";
 import axios from "axios";
+import { useAppSelector } from "@/app/hooks";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 const plans = [
   {
@@ -16,7 +18,7 @@ const plans = [
       { text: "AI-generated content", included: false },
       { text: "Certificate of completion", included: false },
     ],
-    button: "Choose Plan",
+    button: "Continue",
   },
   {
     name: "Basic",
@@ -28,7 +30,7 @@ const plans = [
       { text: "AI-generated content", included: true },
       { text: "Certificate of completion", included: false },
     ],
-    button: "Choose Basic",
+    button: "Pay Now",
   },
   {
     name: "Premium",
@@ -39,16 +41,27 @@ const plans = [
       { text: "AI-generated content", included: true },
       { text: "Certificate of completion", included: true },
     ],
-    button: "Contact Sales",
+    button: "Get Premium",
   },
 ];
 
 const PricingCards = () => {
+  const router = useRouter();
   const [loadingPlan, setLoadingPlan] = useState<boolean | null>(null);
+  const { user } = useAppSelector((state) => state.user);
 
   const handlePricing = async (plan: any) => {
+    setLoadingPlan(true);
+    if (!user) {
+      toast.error("Login session expired.", {
+        position: "top-right",
+        duration: 2000,
+      });
+      router.push("/auth");
+      setLoadingPlan(false);
+      return;
+    }
     try {
-      setLoadingPlan(true);
       const res = await axios.post("/api/payment/init", {
         total_amount: plan.price,
         product_name: plan.name,
@@ -73,9 +86,9 @@ const PricingCards = () => {
   };
 
   return (
-    <div className="w-full h-full flex md:items-center md:justify-center relative">
+    <div className="w-[95%] mx-auto h-full flex md:items-center md:justify-center relative">
       <div className="w-full py-10 px-4 ">
-        <div className="grid md:grid-cols-3 gap-14 md:gap-6 max-w-6xl mx-auto">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-14 md:gap-6 max-w-6xl mx-auto">
           {plans.map((plan, index) => {
             const cardContent = (
               <motion.div
@@ -87,10 +100,10 @@ const PricingCards = () => {
                   plan.popular
                     ? "scale-100"
                     : "border border-gray-700 dark:border-none"
-                } flex flex-col justify-between dark:bg-gray-800 rounded-2xl shadow-2xl dark:shadow-white/20 text-gray-700 dark:text-gray-400  p-6 relative`}
+                } flex flex-col justify-between dark:bg-gray-800 rounded-2xl shadow-xl dark:shadow-purple-500/10 text-gray-700 dark:text-gray-400  p-6 relative`}
               >
                 {plan.popular && (
-                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-green-800 text-white px-3 py-1 rounded-full text-sm flex items-center gap-1 shadow-md">
+                  <div className="absolute scale-[1.01] -top-4 left-1/2 -translate-x-1/2 bg-green-800 text-white px-3 py-1 rounded-full text-sm flex items-center gap-1 shadow-md">
                     <FaCrown className="text-yellow-300" /> Most Popular
                   </div>
                 )}
@@ -117,14 +130,18 @@ const PricingCards = () => {
                     ))}
                   </ul>
                 </div>
-                <Button
-                  onClick={() => handlePricing(plan)}
-                  variant="outlined"
-                  className="w-full"
-                  disabled={!!loadingPlan}
+                <div
+                onClick={()=>handlePricing(plan)}
+                  className={`w-full py-1.5 ${
+                    plan.popular
+                      ? "bg-purple-600 hover:bg-purple-700 text-white dark:text-gray-900"
+                      : "border border-purple-600"
+                  } active:scale-[0.98] text-center transition-all duration-300 delay-75 ${
+                    loadingPlan ? "cursor-progress" : "cursor-pointer"
+                  }`}
                 >
                   {loadingPlan ? "Processing..." : plan.button}
-                </Button>
+                </div>
               </motion.div>
             );
 
@@ -135,7 +152,7 @@ const PricingCards = () => {
                 transition={{ duration: 0.6, ease: "easeOut" }}
                 viewport={{ once: true }}
                 key={index}
-                className="p-[1px] rounded-2xl animated-gradient"
+                className="p-[1.5px] rounded-2xl animated-gradient"
               >
                 {cardContent}
               </motion.div>

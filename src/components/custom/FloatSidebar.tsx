@@ -32,7 +32,7 @@ const Items = [
   {
     id: 4,
     name: "Profile",
-    Icon: () => <FaUser  size={20} />,
+    Icon: () => <FaUser size={20} />,
     link: "/profile",
   },
 ];
@@ -84,6 +84,7 @@ const FloatSidebar = () => {
                 <div className="w-full flex items-center justify-center">
                   <Button
                     component="label"
+                    onClick={() => router.push("/pricing")}
                     className={`${isOpen ? "w-[80%]" : "px-2"}`}
                     role={undefined}
                     variant="outlined"

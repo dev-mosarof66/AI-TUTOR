@@ -91,7 +91,7 @@ const Sidebar = () => {
       </div>
 
       {/* Sidebar Items */}
-      <div className="w-full h-[75vh] flex flex-col gap-6 py-6">
+      <div className="w-full h-[75vh] flex flex-col gap-4 py-6">
         {items.map(({ id, name, Icon, link }) => (
           <div key={id}>
             {!toggleSidebar ? (
@@ -122,7 +122,7 @@ const Sidebar = () => {
                   setActiveTab(id);
                   router.push(link);
                 }}
-                className={`w-full flex py-2 gap-4 px-6 ${
+                className={`w-full flex py-2 gap-2 px-6 ${
                   id === 4
                     ? "text-amber-400"
                     : `${isDarkMode ? "text-green-500" : "text-blue-800"}`
@@ -142,13 +142,17 @@ const Sidebar = () => {
       <div className="w-full flex flex-col items-center justify-center gap-3">
         {!toggleSidebar ? (
           <div className="w-full flex flex-col gap-4">
-            <Button className="flex items-center justify-center w-full">
-              <LuArrowBigUpDash size={20} className="text-purple-400" />
-            </Button>
+            <Tooltip title="Upgrade Plan" arrow placement="right">
+              <Button className="flex items-center justify-center w-full">
+                <LuArrowBigUpDash size={20} className="text-purple-400" />
+              </Button>
+            </Tooltip>
             {/* Logout icon only */}
-            <Button className="flex items-center justify-center w-full cursor-pointer">
-              <MdOutlineLogout size={20} className="text-red-400" />
-            </Button>
+            <Tooltip title="Logout" arrow placement="right">
+              <Button className="flex items-center justify-center w-full cursor-pointer">
+                <MdOutlineLogout size={20} className="text-red-400" />
+              </Button>
+            </Tooltip>
           </div>
         ) : (
           <div className="w-full flex flex-col gap-2">

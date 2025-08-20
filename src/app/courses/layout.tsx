@@ -44,9 +44,9 @@ const Items = [
 ];
 
 const CourseLayout = ({ children }: Type) => {
+  const dispatch = useAppDispatch();
   const isDarkMode = useAppSelector((state) => state.theme.theme);
   const [searchMode, setSearchMode] = useState(false);
-  const dispatch = useAppDispatch();
   useEffect(() => {
     const load = localStorage.getItem("p_xyz");
     const theme = load ? JSON.parse(load) : null;

@@ -1,14 +1,21 @@
+"use client";
 import { useAppSelector } from "@/app/hooks";
 import CourseCard from "@/components/custom/CourseCard";
-import React from "react";
-
-
+import React, { useEffect, useState } from "react";
+import playlists from "@/../data.js";
 
 const PopularCourse = () => {
-  const { playlists, loading } = useAppSelector((state) => state.playlists);
+  const { loading } = useAppSelector((state) => state.playlists);
+  const [popularCourses, setPopularCourses] = useState<typeof playlists>([]);
+
+  useEffect(() => {
+    const filtered = playlists.filter((course) => course.popular === true);
+    setPopularCourses(filtered);
+  }, []);
+
   return (
-    <div>
-      <CourseCard courses={playlists} loading={loading} />
+    <div className="w-[96%] mx-auto">
+      <CourseCard courses={popularCourses} loading={loading} />
     </div>
   );
 };

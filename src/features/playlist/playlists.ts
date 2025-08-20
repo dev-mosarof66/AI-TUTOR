@@ -21,6 +21,7 @@ export interface Playlist {
     modules: ModuleType[];
     popular: boolean;
     __v: number;
+    category:string
 }
 
 interface CreatePlaylistArgs {
