@@ -1,27 +1,24 @@
 "use client";
 import Sidebar from "@/components/custom/sidebar";
 import React, { useEffect, useState } from "react";
-import { FaStar, FaFire } from "react-icons/fa";
+import { FaStar, FaFire, FaUserAlt } from "react-icons/fa";
 import { MdHome } from "react-icons/md";
 import "../../css/sidebar.css";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import { changeTheme } from "@/features/theme/themeSlice";
 import Header from "@/components/custom/Header";
 import Search from "@/components/custom/Search";
-import { FaUserAlt } from "react-icons/fa";
-
+import { fetchUserData } from "@/features/user/userSlice";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
+import { getAllPlaylist } from "@/features/playlist/playlists";
 
 interface Type {
   children: React.ReactNode;
 }
 
 const Items = [
-  {
-    id: 1,
-    name: "Home",
-    Icon: () => <MdHome size={24} />,
-    link: "/courses",
-  },
+  { id: 1, name: "Home", Icon: () => <MdHome size={24} />, link: "/courses" },
   {
     id: 2,
     name: "Popular",
@@ -43,24 +40,55 @@ const Items = [
 ];
 
 const CourseLayout = ({ children }: Type) => {
+  const router = useRouter();
   const dispatch = useAppDispatch();
   const isDarkMode = useAppSelector((state) => state.theme.theme);
+  const { user, loading, fetched } = useAppSelector((state) => state.user);
   const [searchMode, setSearchMode] = useState(false);
+
+  // Load theme + user
   useEffect(() => {
-    const load = localStorage.getItem("p_xyz");
-    const theme = load ? JSON.parse(load) : null;
-    dispatch(changeTheme(theme));
+    if (typeof window !== "undefined") {
+      const load = localStorage.getItem("p_xyz");
+      const theme = load ? JSON.parse(load) : null;
+      if (theme) dispatch(changeTheme(theme));
+    }
+    dispatch(fetchUserData());
+    dispatch(getAllPlaylist());
   }, [dispatch]);
+
+  // Redirect if no user
+  useEffect(() => {
+    if (fetched && !user) {
+      toast.error("Login session expired.");
+      router.push("/auth");
+    }
+  }, [user, fetched, router]);
+
+  // Loading screen
+  if (loading) {
+    return (
+      <div
+        className={`w-full h-screen flex flex-col items-center justify-center ${
+          isDarkMode ? "bg-gray-800" : "bg-gray-300"
+        }`}
+      >
+        <span className="loading loading-ring w-12 h-12"></span>
+        <p className="mt-4 text-purple-600 text-lg">Fetching user data...</p>
+      </div>
+    );
+  }
+
   return (
     <div
-      className={`w-full h-screen flex  ${
-        !isDarkMode ? "bg-stone-100" : " bg-gray-800"
+      className={`w-full h-screen flex ${
+        isDarkMode ? "bg-gray-800" : "bg-stone-100"
       }`}
     >
       <Sidebar items={Items} isDarkMode={isDarkMode} />
-      <div className="w-[95%] mx-auto sm:w-[90%] h-screen ">
+      <div className="flex flex-col h-screen w-[95%] mx-auto sm:w-[90%]">
         <Header setSearchMode={setSearchMode} hideSearch={false} />
-        <div className="w-full h-[88vh] md:h-[86vh] pt-10 md:pt-4 overflow-y-scroll scrollbar-hidden">
+        <div className="flex-grow overflow-y-auto pt-10 md:pt-4 scrollbar-hidden">
           {children}
         </div>
       </div>

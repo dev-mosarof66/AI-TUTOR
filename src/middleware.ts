@@ -5,9 +5,9 @@ import * as jose from 'jose'
 export async function middleware(req: NextRequest) {
     try {
         const token = req.cookies.get("token")?.value;
-        console.log('token in middleware : ', token)
+        // console.log('token in middleware : ', token)
         if (!token) {
-            return NextResponse.redirect(new URL(`${process.env.NEXT_PUBLIC_APP_URL}/auth`, req.url));
+            return NextResponse.redirect(new URL(`${process.env.NEXT_PUBLIC_APP_URL}`, req.url));
         }
         const secret = new TextEncoder().encode(process.env.JWT_SECRET)
         const { payload } = await jose.jwtVerify(token, secret);
@@ -25,5 +25,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-    matcher: ["/dashboard/:path*", "/profile/:path*", '/'],
+    matcher: [],
 };

@@ -81,7 +81,6 @@ export const POST = async (req: NextRequest) => {
 export const GET = async (req: NextRequest) => {
     try {
         const token = req.cookies.get("token")?.value;
-        console.log(token)
         if (!token) {
             return NextResponse.json(
                 { message: "Login session expired.", data: null },
@@ -91,9 +90,11 @@ export const GET = async (req: NextRequest) => {
 
         const secretKey = new TextEncoder().encode(process.env.JWT_SECRET);
         const { payload } = await jose.jwtVerify(token, secretKey);
-        console.log("payload in /auth : ", payload)
 
-        if (!payload) {
+        const userId = payload.id as string;
+        console.log("userId from token payload in /auth : ", userId)
+
+        if (!userId) {
             return NextResponse.json(
                 {
                     message: "Login session expired."
@@ -102,7 +103,7 @@ export const GET = async (req: NextRequest) => {
             )
         }
 
-        const user = await User.findById(JSON.parse(JSON.stringify(payload)).id);
+        const user = await User.findById(userId);
         console.log("user in /auth : ", user)
         if (!user) {
             return NextResponse.json(

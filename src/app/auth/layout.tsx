@@ -19,10 +19,9 @@ const AuthLaout = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     if (user) {
-      console.log("User data in AuthLayout:", user);
       router.push("/courses");
     }
-  }, [user,router]);
+  }, [user, router]);
 
   if (loading) {
     return (

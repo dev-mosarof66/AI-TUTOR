@@ -1,23 +1,11 @@
 "use client";
-import React, { useEffect } from "react";
+import React from "react";
 import "../../css/sidebar.css";
-import { useAppDispatch, useAppSelector } from "../hooks";
-import { changeTheme } from "@/features/theme/themeSlice";
+import { useAppSelector } from "../hooks";
 import CourseContent from "@/components/custom/CourseContent";
-import { getAllPlaylist } from "@/features/playlist/playlists";
 
 const Courses = () => {
-  const dispatch = useAppDispatch();
 
-  const { playlists } = useAppSelector((state) => state.playlists);
-  useEffect(() => {
-    const load = localStorage.getItem("p_xyz");
-    const theme = load ? JSON.parse(load) : null;
-    dispatch(changeTheme(theme));
-    dispatch(getAllPlaylist());
-  }, [dispatch]);
-
-  console.log("playlists in courses page: ", playlists);
 
   return (
     <div

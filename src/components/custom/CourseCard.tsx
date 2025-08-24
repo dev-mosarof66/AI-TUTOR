@@ -22,7 +22,6 @@ const CourseCard = () => {
   const subTextColor = isDarkMode ? "text-gray-400" : "text-gray-600";
   const cardBg = isDarkMode ? "bg-purple-800/20" : "bg-purple-400/30";
   const iconColor = isDarkMode ? "text-purple-300" : "text-purple-700";
-  console.log('courses in coursecard: ', playlists);
 
   return (
     <div className="w-full">

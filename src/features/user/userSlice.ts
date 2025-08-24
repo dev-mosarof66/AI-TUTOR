@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
-import { toast } from "react-hot-toast";
 
 interface PlanProps {
     title: string;
@@ -18,6 +17,7 @@ interface UserState {
     loading: boolean;
     isError: boolean;
     errorMessage: string | null;
+    fetched: boolean;
 }
 
 const initialState: UserState = {
@@ -25,6 +25,7 @@ const initialState: UserState = {
     loading: false,
     isError: false,
     errorMessage: null,
+    fetched:false
 };
 
 export const fetchUserData = createAsyncThunk<UserProps, void, { rejectValue: string }>(
@@ -39,7 +40,6 @@ export const fetchUserData = createAsyncThunk<UserProps, void, { rejectValue: st
                 (error?.response?.status === 401
                     ? "Login session expired. Please login again."
                     : "Failed to fetch user data");
-            toast.error(message);
             return thunkAPI.rejectWithValue(message);
         }
     }
@@ -64,11 +64,14 @@ const userSlice = createSlice({
             .addCase(fetchUserData.fulfilled, (state, action) => {
                 state.loading = false;
                 state.user = action.payload;
+                state.fetched = true;
             })
             .addCase(fetchUserData.rejected, (state, action) => {
                 state.loading = false;
                 state.isError = true;
                 state.errorMessage = action.payload || "Something went wrong";
+                state.user = null;
+                state.fetched = true;
             });
     },
 });

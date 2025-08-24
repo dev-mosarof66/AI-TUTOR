@@ -38,14 +38,14 @@ const AuthForm = () => {
 
           if (res.status === 201) {
             console.log("User created successfully:", res.data);
+            localStorage.setItem("isNewUser", JSON.stringify(false));
             router.push("/courses");
           }
-          
         }
       }
+    } finally {
       setEmail("");
       setPassword("");
-    } finally {
       setLoading(false);
     }
   };
@@ -64,6 +64,7 @@ const AuthForm = () => {
 
         if (res.status === 201) {
           console.log("User created successfully:", res.data);
+          localStorage.setItem("isNewUser", JSON.stringify(false));
           router.push("/courses");
         }
       }
