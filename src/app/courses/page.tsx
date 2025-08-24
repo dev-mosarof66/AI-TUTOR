@@ -5,18 +5,19 @@ import { useAppDispatch, useAppSelector } from "../hooks";
 import { changeTheme } from "@/features/theme/themeSlice";
 import CourseContent from "@/components/custom/CourseContent";
 import { getAllPlaylist } from "@/features/playlist/playlists";
-import playlists from "@/../data.js";
 
 const Courses = () => {
   const dispatch = useAppDispatch();
 
-  const { loading } = useAppSelector((state) => state.playlists);
+  const { playlists } = useAppSelector((state) => state.playlists);
   useEffect(() => {
     const load = localStorage.getItem("p_xyz");
     const theme = load ? JSON.parse(load) : null;
     dispatch(changeTheme(theme));
     dispatch(getAllPlaylist());
   }, [dispatch]);
+
+  console.log("playlists in courses page: ", playlists);
 
   return (
     <div
@@ -26,7 +27,7 @@ const Courses = () => {
       {/* divider  */}
       <div className={`w-full bg-gray-500 h-[1px] my-4`}></div>
       {/* courses  */}
-      <CourseContent playlists={playlists} loading={loading} />
+      <CourseContent />
     </div>
   );
 };

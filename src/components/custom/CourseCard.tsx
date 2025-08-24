@@ -9,30 +9,20 @@ import { BsFillTriangleFill } from "react-icons/bs";
 import { FaSquare, FaPlaystation } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import { Button } from "@mui/material";
-import { Playlist } from "@/features/playlist/playlists";
 import PlaylistSkeleton from "../admin/PlaylistSkeleton";
 
-interface Props {
-  courses: Playlist[];
-  loading: boolean;
-}
 
 
-//  title: "Advanced Python Scripting",
-//     description: "Automate workflows and processes with advanced Python scripting.",
-//     category: "Python",
-//     level: "advance",
-//     duration: "9h",
-//     modules: 21,
-//     popular: false,
 
-const CourseCard = ({ courses, loading }: Props) => {
+const CourseCard = () => {
   const isDarkMode = useAppSelector((state) => state.theme.theme);
+  const {playlists,loading} = useAppSelector((state) => state.playlists);
   const router = useRouter();
   const textColor = isDarkMode ? "text-gray-300" : "text-gray-800";
   const subTextColor = isDarkMode ? "text-gray-400" : "text-gray-600";
   const cardBg = isDarkMode ? "bg-purple-800/20" : "bg-purple-400/30";
   const iconColor = isDarkMode ? "text-purple-300" : "text-purple-700";
+  console.log('courses in coursecard: ', playlists);
 
   return (
     <div className="w-full">
@@ -45,14 +35,14 @@ const CourseCard = ({ courses, loading }: Props) => {
           <PlaylistSkeleton />
           <PlaylistSkeleton />
         </div>
-      ) : courses.length === 0 ? (
+      ) : playlists.length === 0 ? (
         <p className="text-center text-gray-500 py-10">No courses available.</p>
       ) : (
         <div className="w-full my-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {courses.map((course) => {
-            // const duration = course.duration ?? 0;
-            // const hours = Math.floor(duration / 3600);
-            // const minutes = Math.floor((duration % 3600) / 60);
+          {playlists.map((course) => {
+            const duration = course.duration ?? 0;
+            const hours = Math.floor(duration / 3600);
+            const minutes = Math.floor((duration % 3600) / 60);
             return (
               <article
                 key={course._id}
@@ -83,21 +73,20 @@ const CourseCard = ({ courses, loading }: Props) => {
                     {/* Duration */}
                     <div className={`flex items-center gap-1 ${iconColor}`}>
                       <FaHourglassStart /> 
-                      {course.duration}
-                      {/* {course.duration != null ? (
+                      {course.duration != null ? (
                         <span className="text-sm">
                           {hours === 0 ? "" : hours + " h : "} {minutes}m
                         </span>
                       ) : (
                         "0"
-                      )} */}
+                      )}
                     </div>
 
                     {/* Lessons */}
                     <div className={`flex items-center gap-1 ${iconColor}`}>
                       <MdOutlineDiscount />
                       {/* <span>{course.modules}</span> */}
-                      {/* <span>{course.modules.length}</span> */}
+                      <span>{course.modules.length}</span>
                     </div>
                   </div>
                   <Button

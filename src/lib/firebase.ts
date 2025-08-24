@@ -1,8 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 
-console.log(process.env.FIREBASE_API_KEY)
-
 const firebaseConfig = {
   apiKey: `AIzaSyC0fZYiitpbXdzGzZjdoMvSu7mmB4PgR0Y`,
   authDomain: "neura---ai.firebaseapp.com",

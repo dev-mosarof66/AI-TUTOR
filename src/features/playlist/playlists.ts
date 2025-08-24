@@ -18,6 +18,7 @@ export interface Playlist {
     updatedAt: string;
     duration: number | null;
     level: string | null;
+    views: number;
     modules: ModuleType[];
     popular: boolean;
     __v: number;

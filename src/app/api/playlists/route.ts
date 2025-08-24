@@ -7,7 +7,7 @@ connectDB();
 export async function GET() {
   try {
     const allCourses = await Playlist.find();
-    console.log(allCourses)
+    // console.log(allCourses)
     return NextResponse.json(
       { success: true, data: allCourses },
       { status: 200 }

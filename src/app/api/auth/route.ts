@@ -24,13 +24,13 @@ export const POST = async (req: NextRequest) => {
 
         //create new token
         const secretKey = new TextEncoder().encode(process.env.JWT_SECRET);
-        const token = await new jose.SignJWT({ id: existingUser?._id })
-            .setProtectedHeader({ alg: "HS256" })
-            .setIssuedAt()
-            .setExpirationTime("365d")
-            .sign(secretKey);
 
         if (existingUser) {
+            const token = await new jose.SignJWT({ id: existingUser?._id.toString() })
+                .setProtectedHeader({ alg: "HS256" })
+                .setIssuedAt()
+                .setExpirationTime("365d")
+                .sign(secretKey);
             const res = NextResponse.json(
                 { data: existingUser },
                 { status: 201 }
@@ -45,6 +45,12 @@ export const POST = async (req: NextRequest) => {
         }
 
         const user = await User.create({ email, avatar, name });
+        const token = await new jose.SignJWT({ id: user?._id.toString() })
+            .setProtectedHeader({ alg: "HS256" })
+            .setIssuedAt()
+            .setExpirationTime("365d")
+            .sign(secretKey);
+
         if (!user) {
             return NextResponse.json(
                 { message: "Failed to create user", data: null },
@@ -85,34 +91,35 @@ export const GET = async (req: NextRequest) => {
 
         const secretKey = new TextEncoder().encode(process.env.JWT_SECRET);
         const { payload } = await jose.jwtVerify(token, secretKey);
+        console.log("payload in /auth : ", payload)
 
         if (!payload) {
             return NextResponse.json(
                 {
                     message: "Login session expired."
                 },
-                { status: 402 }
+                { status: 401 }
             )
         }
 
-        const user = await User.findById(payload.id);
+        const user = await User.findById(JSON.parse(JSON.stringify(payload)).id);
         console.log("user in /auth : ", user)
         if (!user) {
             return NextResponse.json(
-                { message: "User not found", data: null },
-                { status: 404 }
+                { message: "Your internet connection is unstable.", data: null },
+                { status: 402 }
             );
         }
 
         return NextResponse.json(
             { message: "User retrieved successfully", data: user },
-            { status: 200 }
+            { status: 201 }
         );
     } catch (error) {
         console.error("Error in GET /user", error);
         return NextResponse.json(
-            { message: "Invalid or expired token", data: null },
-            { status: 401 }
+            { message: "Internal server error", data: null },
+            { status: 500 }
         );
     }
 };

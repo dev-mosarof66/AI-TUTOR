@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import "../../css/sidebar.css";
 import { Button } from "@mui/material";
 import CourseCard from "./CourseCard";
-import { Playlist } from "@/features/playlist/playlists";
 
 const Tabs = [
   {
@@ -40,33 +39,16 @@ const Tabs = [
   },
 ];
 
-interface PlaylistsProps {
-  playlists: Playlist[];
-  loading: boolean;
-}
-
-const CourseContent = ({ playlists, loading }: PlaylistsProps) => {
+const CourseContent = () => {
   const [selectedTab, setSelectedTab] = useState(0);
-  const [courses, setCourses] = useState(playlists);
-  const filterCourses = (category: string, id: number) => {
-    setSelectedTab(id);
-    console.log(category);
-    if (category.toUpperCase() === "ALL") {
-      console.log("inside all");
-      setCourses(playlists);
-    } else {
-      const courses = playlists.filter((t) => category === t.category);
-      console.log(courses);
-      setCourses(courses);
-    }
-  };
+
   return (
     <div className="w-full">
       <div className="w-full md:w-[580px] xl:w-full flex items-center gap-2 overflow-x-scroll scrollbar-hidden">
         {Tabs.map((tab) => (
           <div
-            onClick={() => filterCourses(tab.name, tab.id)}
             key={tab.id}
+            onClick={() => setSelectedTab(tab.id)}
             className={`${
               selectedTab === tab.id && "bg-purple-500/30"
             } duration-200 delay-100 cursor-pointer rounded-sm`}
@@ -81,7 +63,7 @@ const CourseContent = ({ playlists, loading }: PlaylistsProps) => {
         ))}
       </div>
       <div>
-        <CourseCard courses={courses} loading={loading} />
+        <CourseCard />
       </div>
     </div>
   );

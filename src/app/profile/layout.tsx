@@ -2,7 +2,7 @@
 import React, { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import { changeTheme } from "@/features/theme/themeSlice";
-import { checkUserAuth } from "@/features/user/userSlice";
+import { fetchUserData } from "@/features/user/userSlice";
 import Sidebar from "@/components/profile/sidebar";
 
 const ProfileLayout = ({ children }: { children: React.ReactNode }) => {
@@ -12,7 +12,7 @@ const ProfileLayout = ({ children }: { children: React.ReactNode }) => {
     const load = localStorage.getItem("p_xyz");
     const theme = load ? JSON.parse(load) : null;
     dispatch(changeTheme(theme));
-    dispatch(checkUserAuth());
+    dispatch(fetchUserData());
   }, [dispatch]);
   return (
     <div

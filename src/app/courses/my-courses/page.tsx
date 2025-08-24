@@ -103,7 +103,7 @@ const MyCourses = () => {
   return (
     <div className="w-[96%] mx-auto h-screen">
       {courses.length > 0 ? (
-        <CourseCard courses={courses} />
+        <CourseCard  />
       ) : (
         <div className="w-full flex flex-col justify-center items-center gap-10">
           <h2 className="text-purple-500/50 text-lg sm:text-xl">
