@@ -59,7 +59,9 @@ const CourseLayout = ({ children }: Type) => {
 
   // Redirect if no user
   useEffect(() => {
-    if (fetched && !user) {
+    const isUserNew = localStorage.getItem("isNewUser");
+    const parsed = JSON.parse(isUserNew || "true");
+    if (parsed && fetched && !user) {
       toast.error("Login session expired.");
       router.push("/auth");
     }
