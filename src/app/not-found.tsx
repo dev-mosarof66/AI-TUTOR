@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "@mui/material";
 import { useRouter } from "next/navigation";
-import { TbError404 } from "react-icons/tb";
 
 export default function PaymentCancelledPage() {
   const router = useRouter();

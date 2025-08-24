@@ -1,23 +1,12 @@
 "use client";
-import React, { useEffect } from "react";
+import React from "react";
 import Navbar from "@/components/navbar";
 import Hero from "@/components/hero";
-import { useAppDispatch, useAppSelector } from "./hooks";
-import { checkUserAuth } from "@/features/user/userSlice";
-import { useRouter } from "next/navigation";
+import { useAppSelector } from "./hooks";
+
 const Home = () => {
-  const router = useRouter();
-  const { user, loading } = useAppSelector((state) => state.user);
+  const { loading } = useAppSelector((state) => state.user);
   const isDarkMode = useAppSelector((state) => state.theme);
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    dispatch(checkUserAuth());
-    if (user) {
-      router.push("/courses");
-    }
-  }, [dispatch, router, user]);
-
 
   if (loading) {
     return (

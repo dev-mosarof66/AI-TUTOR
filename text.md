@@ -1,4 +1,4 @@
-auth ui is done..
+auth backend is done..
 
 Next: 
-we will look into auth backend(21-8-2025)
+little bit of debugging is required.

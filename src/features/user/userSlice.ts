@@ -1,6 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
+import { createSlice } from "@reduxjs/toolkit";
 
 interface PlanProps {
     title: string;
@@ -26,43 +24,22 @@ const initialState: UserState = {
     errorMessage: null
 };
 
-export const checkUserAuth = createAsyncThunk<UserProps, void, { rejectValue: string }>("user/checkUserAuth",
-    async (_, thunkAPI) => {
-        try {
-            const res = await axios.get("/api/auth");
-
-            if (res.status >= 300) {
-                return thunkAPI.rejectWithValue(`Network error. Check your internet connection`);
-            }
-
-            const user: UserProps = res?.data.data ?? [];
-
-            return user;
-        } catch (error: any) {
-            return thunkAPI.rejectWithValue(error.message || "Unknown error");
-        }
-    });
 
 const userSlice = createSlice({
     name: "user",
     initialState,
-    reducers: {},
-    extraReducers: (builder) => {
-        builder
-            .addCase(checkUserAuth.pending, (state) => {
-                state.isError = false;
-                state.errorMessage = null;
-                state.loading = true;
-            })
-            .addCase(checkUserAuth.fulfilled, (state, action) => {
-                state.loading = false;
-                state.user = action.payload;
-            })
-            .addCase(checkUserAuth.rejected, (state) => {
-                state.user = null;
-                state.loading = false;
-            });
+    reducers: {
+        logout: (state) => {
+            state.user = null;
+            state.isError = false;
+            state.errorMessage = null;
+            state.loading = false;
+        },
+        setUser: (state, action) => {
+            state.user = action.payload;
+        }
     },
+
 });
 
 export default userSlice.reducer;

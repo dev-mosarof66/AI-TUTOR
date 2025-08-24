@@ -50,9 +50,9 @@ const CourseCard = ({ courses, loading }: Props) => {
       ) : (
         <div className="w-full my-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {courses.map((course) => {
-            const duration = course.duration ?? 0;
-            const hours = Math.floor(duration / 3600);
-            const minutes = Math.floor((duration % 3600) / 60);
+            // const duration = course.duration ?? 0;
+            // const hours = Math.floor(duration / 3600);
+            // const minutes = Math.floor((duration % 3600) / 60);
             return (
               <article
                 key={course._id}
@@ -96,7 +96,7 @@ const CourseCard = ({ courses, loading }: Props) => {
                     {/* Lessons */}
                     <div className={`flex items-center gap-1 ${iconColor}`}>
                       <MdOutlineDiscount />
-                      <span>{course.modules}</span>
+                      {/* <span>{course.modules}</span> */}
                       {/* <span>{course.modules.length}</span> */}
                     </div>
                   </div>

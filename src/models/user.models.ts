@@ -1,5 +1,7 @@
 import mongoose, { Schema, model } from 'mongoose';
 
+
+
 const planSchema = new Schema({
     title: { type: String, default: null },
     amount: { type: Number, default: 0 },
@@ -11,6 +13,8 @@ const planSchema = new Schema({
 
 const UserSchema = new Schema({
     email: { type: String, required: true, unique: true },
+    name: { type: String, default: null },
+    avatar: { type: String, default: null },
     currentPlan: { type: String, default: null },
     plans: [planSchema],
 
@@ -23,6 +27,9 @@ const UserSchema = new Schema({
 }, {
     timestamps: true
 });
+
+
+
 
 const User = mongoose.models.User || model('User', UserSchema);
 export default User;

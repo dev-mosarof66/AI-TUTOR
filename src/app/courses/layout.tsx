@@ -8,7 +8,6 @@ import { useAppDispatch, useAppSelector } from "../hooks";
 import { changeTheme } from "@/features/theme/themeSlice";
 import Header from "@/components/custom/Header";
 import Search from "@/components/custom/Search";
-import { checkUserAuth } from "@/features/user/userSlice";
 import { FaUserAlt } from "react-icons/fa";
 
 
@@ -51,7 +50,6 @@ const CourseLayout = ({ children }: Type) => {
     const load = localStorage.getItem("p_xyz");
     const theme = load ? JSON.parse(load) : null;
     dispatch(changeTheme(theme));
-    dispatch(checkUserAuth());
   }, [dispatch]);
   return (
     <div
