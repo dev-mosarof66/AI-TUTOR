@@ -47,7 +47,7 @@ const CourseLayout = ({ children }: Type) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const isDarkMode = useAppSelector((state) => state.theme.theme);
-  const { user, loading, fetched } = useAppSelector((state) => state.user);
+  const { user, fetched } = useAppSelector((state) => state.user);
   const [searchMode, setSearchMode] = useState(false);
 
   // Load theme + user
@@ -71,19 +71,6 @@ const CourseLayout = ({ children }: Type) => {
     }
   }, [user, fetched, router]);
 
-  // Loading screen
-  if (loading) {
-    return (
-      <div
-        className={`w-full h-screen flex flex-col items-center justify-center ${
-          isDarkMode ? "bg-gray-800" : "bg-gray-300"
-        }`}
-      >
-        <span className="loading loading-ring w-12 h-12"></span>
-        <p className="mt-4 text-purple-600 text-lg">Fetching user data...</p>
-      </div>
-    );
-  }
 
   return (
     <div

@@ -1,16 +1,25 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
+import { Playlist } from "../playlist/playlists";
 
 interface PlanProps {
     title: string;
 }
 
-interface UserProps {
+export interface UserProps {
+    _id: string;
     email: string;
+    name: string;
+    avatar: string;
     currentPlan: string | null;
-    plans: PlanProps[];
+    enrolledCourses: Playlist[] | []; 
+    plans: PlanProps[] | [];
+    createdAt: string;   
+    updatedAt: string;
+    __v: number;
 }
+
 
 interface UserState {
     user: UserProps | null;
@@ -25,7 +34,7 @@ const initialState: UserState = {
     loading: false,
     isError: false,
     errorMessage: null,
-    fetched:false
+    fetched: false
 };
 
 export const fetchUserData = createAsyncThunk<UserProps, void, { rejectValue: string }>(
@@ -70,8 +79,12 @@ const userSlice = createSlice({
                 state.loading = false;
                 state.isError = true;
                 state.errorMessage = action.payload || "Something went wrong";
-                state.user = null;
-                state.fetched = true;
+                if (action.payload?.includes("Login session expired")) {
+                    state.fetched = true;
+                    state.user = null;
+                } else {
+                    state.fetched = false;
+                }
             });
     },
 });

@@ -99,7 +99,6 @@ export const signinWithEmail = async (email: string, password: string) => {
 export const logout = async () => {
     try {
         await signOut(auth);
-        toast.success("Logged out successfully!", { position: "top-right" });
         return true;
     } catch (error: any) {
         toast.error(getErrorMessage(error.code), { position: "top-right" });

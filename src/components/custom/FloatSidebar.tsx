@@ -43,7 +43,7 @@ const FloatSidebar = () => {
       const res = await axios.post("/api/auth/logout", {}, { withCredentials: true });
       if (res.status === 201) {
         toast.success(res.data.message, { position: "top-right" });
-        router.push("/auth");
+        router.push("/");
       }
     } catch (error) {
       const status =

@@ -1,121 +1,46 @@
 "use client";
+import { useAppSelector } from "@/app/hooks";
 import CourseCard from "@/components/custom/CourseCard";
-import { Button } from "@mui/material";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { FaSearch } from "react-icons/fa";
 
-const courses = [
-  {
-    id: 1,
-    title: "React for Beginners",
-    description:
-      "Learn the fundamentals of building dynamic user interfaces with React, including components, hooks, and JSX.",
-    duration: "8h",
-    level: "basic",
-    lessons: 24,
-  },
-  {
-    id: 2,
-    title: "Advanced JavaScript",
-    description:
-      "Master advanced JavaScript concepts such as closures, prototypes, async/await, and ES6+ features.",
-    duration: "10h",
-    level: "advance",
-    lessons: 30,
-  },
-  {
-    id: 3,
-    title: "Python Programming",
-    description:
-      "Get started with Python for data analysis, automation, and software development.",
-    duration: "12h",
-    level: "basic",
-    lessons: 28,
-  },
-  {
-    id: 4,
-    title: "HTML & CSS Essentials",
-    description:
-      "Build beautiful and responsive web pages using HTML5 and modern CSS, including Flexbox and Grid.",
-    duration: "6h",
-    level: "basic",
-    lessons: 20,
-  },
-  {
-    id: 5,
-    title: "Node.js and Express",
-    description:
-      "Create backend applications using Node.js and Express, including RESTful APIs and middleware.",
-    duration: "9h",
-    level: "advance",
-    lessons: 22,
-  },
-  {
-    id: 6,
-    title: "Full-Stack Web Development",
-    description:
-      "Build full-stack applications using MongoDB, Express, React, and Node.js (MERN Stack).",
-    duration: "14h",
-    level: "advance",
-    lessons: 35,
-  },
-  {
-    id: 7,
-    title: "TypeScript Crash Course",
-    description:
-      "Understand the basics of TypeScript to improve JavaScript development with static typing.",
-    duration: "5h",
-    level: "basic",
-    lessons: 15,
-  },
-  {
-    id: 8,
-    title: "Django Web Development",
-    description:
-      "Build web apps using Django, a high-level Python framework with built-in admin and ORM support.",
-    duration: "10h",
-    level: "advance",
-    lessons: 26,
-  },
-  {
-    id: 9,
-    title: "C Programming Basics",
-    description:
-      "Explore foundational C programming concepts including pointers, memory management, and structures.",
-    duration: "7h",
-    level: "basic",
-    lessons: 18,
-  },
-  {
-    id: 10,
-    title: "Java Programming",
-    description:
-      "Dive into OOP with Java, covering classes, interfaces, inheritance, and multithreading.",
-    duration: "11h",
-    level: "advance",
-    lessons: 27,
-  },
-];
-
 const MyCourses = () => {
   const router = useRouter();
+  const { user } = useAppSelector((state) => state.user);
+  console.log(user?.enrolledCourses);
+
   return (
-    <div className="w-[96%] mx-auto h-screen">
-      {courses.length > 0 ? (
-        <CourseCard  />
+    <div className="w-[96%] mx-auto">
+      {(user?.enrolledCourses?.length ?? 0) > 0 ? (
+        <div className="w-full my-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {user?.enrolledCourses.map((course) => {
+            const duration = course.duration ?? 0;
+            const hours = Math.floor(duration / 3600);
+            const minutes = Math.floor((duration % 3600) / 60);
+            return (
+              <CourseCard
+                key={course._id}
+                course={course}
+                hours={hours}
+                minutes={minutes}
+                link={`/course/${course._id}`}
+              />
+            );
+          })}
+        </div>
       ) : (
-        <div className="w-full flex flex-col justify-center items-center gap-10">
-          <h2 className="text-purple-500/50 text-lg sm:text-xl">
-            You did not enrolled any courses yet.
+        <div className="w-full flex flex-col justify-center items-center gap-6 py-10">
+          <h2 className="text-purple-500/30 text-base sm:text-xl">
+            You did not enroll in any courses yet.
           </h2>
-          <Button
+          <button
             onClick={() => router.push("/courses")}
-            variant="contained"
-            startIcon={<FaSearch />}
+            className="flex items-center gap-2 border border-purple-600 hover:bg-purple-600 active:scale-[0.97] text-white font-semibold px-6 py-2 cursor-pointer transition-all duration-200 delay-75"
           >
+            <FaSearch />
             Explore
-          </Button>
+          </button>
         </div>
       )}
     </div>

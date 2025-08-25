@@ -88,7 +88,7 @@ const PricingCards = () => {
   return (
     <div className="w-[95%] mx-auto h-full flex md:items-center md:justify-center relative">
       <div className="w-full py-10 px-4 ">
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-14 md:gap-6 max-w-6xl mx-auto">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
           {plans.map((plan, index) => {
             const cardContent = (
               <motion.div
