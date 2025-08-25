@@ -26,13 +26,13 @@ const CourseHeader = ({
   };
 
   return (
-    <div className="w-full mx-auto items-center p-4 sm:py-4 md:p-8">
+    <div className="w-full mx-auto items-center p-4 sm:py-4 md:pt-8 md:px-8">
       <nav className="w-full flex items-center justify-between gap-5">
         {hideSearch && (
           <div>
             <h1
               onClick={() => router.push("/courses")}
-              className={`text-xl sm:text-2xl font-semibold text-green-500 hover:text-green-600 active:text-green-600 cursor-pointer  transition-transform duration-300 delay-75 pl-3`}
+              className={`block sm:hidden text-xl sm:text-2xl font-semibold text-green-500 hover:text-green-600 active:text-green-600 cursor-pointer  transition-transform duration-300 delay-75 pl-3`}
             >
               Neura
             </h1>

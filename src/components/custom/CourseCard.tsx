@@ -26,12 +26,12 @@ const CourseCard = ({ course, hours, minutes, link }: Props) => {
   return (
     <article
       key={course._id}
-      className={`w-full ${cardBg} p-5 rounded-xl shadow-md hover:scale-[1.01] active:ring active:ring-green-500 transition-all cursor-pointer duration-200`}
+      className={`w-full flex flex-col justify-between ${cardBg} p-5 rounded-xl shadow-md hover:scale-[1.01] active:ring active:ring-green-500 transition-all cursor-pointer duration-200`}
     >
       <div className="flex flex-col gap-2">
         <h1 className={`text-xl font-semibold ${textColor}`}>{course.title}</h1>
         <p className={`text-sm ${subTextColor}`}>
-          {course.description.length > 150
+          {course.description.length > 200
             ? course.description.slice(0, 200) + "..."
             : course.description}
         </p>

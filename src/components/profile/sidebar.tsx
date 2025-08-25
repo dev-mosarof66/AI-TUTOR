@@ -42,15 +42,15 @@ const items = [
 ];
 
 const Sidebar = () => {
-  const [toggleSidebar, setToggleSidebar] = useState(false);
+  const [toggleSidebar, setToggleSidebar] = useState(true);
   const isDarkMode = useAppSelector((state) => state.theme.theme);
   const [activeTab, setActiveTab] = useState(1);
   const router = useRouter();
 
   useEffect(() => {
     const resizeWindow = () => {
-      if (window.innerWidth > 768) {
-        setToggleSidebar(true);
+      if (window.innerWidth < 768) {
+        setToggleSidebar(false);
       }
     };
 
@@ -66,8 +66,8 @@ const Sidebar = () => {
     <motion.div
       transition={{ duration: 0.3, ease: "easeInOut" }}
       className={`${
-        toggleSidebar ? "w-64" : "w-fit"
-      } h-screen flex flex-col bg-gray-700 text-gray-300`}
+        toggleSidebar ? "w-64 lg:w-72 xl:w-96" : "w-fit"
+      } h-screen hidden sm:flex flex-col bg-gray-700 text-gray-300`}
     >
       {/* Sidebar Header */}
       <div className="flex items-center justify-between border-b border-gray-500 p-6">

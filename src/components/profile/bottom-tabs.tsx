@@ -1,0 +1,134 @@
+"use client";
+import React, { useState } from "react";
+import {
+  MdHome,
+  MdEdit,
+  MdOutlineLogout,
+  MdSubscriptions,
+} from "react-icons/md";
+import { FaListAlt } from "react-icons/fa";
+import { useRouter } from "next/navigation";
+import { useAppDispatch, useAppSelector } from "@/app/hooks";
+import { logoutUser } from "@/features/user/userSlice";
+import toast from "react-hot-toast";
+
+const items = [
+  {
+    id: 1,
+    name: "Home",
+    Icon: MdHome,
+    link: "/profile",
+  },
+  {
+    id: 2,
+    name: "Edit Profile",
+    Icon: MdEdit,
+    link: "/profile/edit",
+  },
+  {
+    id: 3,
+    name: "Enrolled",
+    Icon: FaListAlt,
+    link: "/profile/enrolled-courses",
+  },
+  {
+    id: 4,
+    name: "Subscription",
+    Icon: MdSubscriptions,
+    link: "/profile/subscriptions",
+  },
+];
+
+interface Props {
+  logout: boolean;
+  setLogout: (value: boolean) => void;
+}
+
+const BottomTabs = ({ setLogout }: Props) => {
+  const isDarkMode = useAppSelector((state) => state.theme.theme);
+  const [activeTab, setActiveTab] = useState(1);
+  const router = useRouter();
+
+  return (
+    <div className="fixed bottom-0 left-0 w-full bg-gray-800 text-gray-300 border-t border-t-purple-800 roundet-xl border-gray-600 flex justify-around items-center sm:hidden py-3 z-50">
+      {items.map(({ id, name, Icon, link }) => (
+        <div
+          key={id}
+          onClick={() => {
+            setActiveTab(id);
+            router.push(link);
+          }}
+          className={`flex flex-col items-center justify-center cursor-pointer transition duration-300 ${
+            activeTab === id
+              ? "text-purple-500"
+              : isDarkMode
+              ? "text-green-500"
+              : "text-blue-500"
+          }`}
+        >
+          <Icon size={22} />
+          <span className="text-xs hidden xs:block">{name}</span>
+        </div>
+      ))}
+
+      {/* for bottom tabs upgrade plan will be handled inside the subscriptions page */}
+
+      {/* Logout */}
+      <div
+        onClick={() => setLogout(true)}
+        className="flex flex-col items-center justify-center cursor-pointer transition duration-300 text-red-400"
+      >
+        <MdOutlineLogout size={22} />
+        <span className="text-xs hidden xs:block">Logout</span>
+      </div>
+    </div>
+  );
+};
+
+export default BottomTabs;
+
+export const LogoutPopup = ({
+  setLogout,
+}: {
+  setLogout: (value: boolean) => void;
+}) => {
+  const dispatch = useAppDispatch();
+  const { loading } = useAppSelector((state) => state.user);
+  const router = useRouter();
+  const handleLogout = async () => {
+    dispatch(logoutUser());
+    toast.success("Logged out successfully");
+    setLogout(false);
+    router.push("/");
+  };
+  return (
+    <div className="w-full h-screen fixed  inset-0 backdrop-blur-xl flex items-center justify-center z-50">
+      <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg mx-4 flex flex-col gap-4 border border-purple-500">
+        <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">
+          Confirm Logout
+        </h2>
+        <p className=" text-gray-600 dark:text-gray-400">
+          Are you sure you want to logout?
+        </p>
+        <div className="flex justify-end space-x-4">
+          <button
+            onClick={() => setLogout(false)}
+            className="px-4 py-2 bg-gray-300 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded hover:bg-gray-400 dark:hover:bg-gray-600 cursor-pointer"
+          >
+            No
+          </button>
+          <button
+            onClick={() => handleLogout()}
+            className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 cursor-pointer"
+          >
+            {loading ? (
+              <span className="loading loading-spinner loading-sm"></span>
+            ) : (
+              "Yes"
+            )}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};

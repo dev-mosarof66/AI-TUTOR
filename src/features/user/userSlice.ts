@@ -13,9 +13,9 @@ export interface UserProps {
     name: string;
     avatar: string;
     currentPlan: string | null;
-    enrolledCourses: Playlist[] | []; 
+    enrolledCourses: Playlist[] | [];
     plans: PlanProps[] | [];
-    createdAt: string;   
+    createdAt: string;
     updatedAt: string;
     __v: number;
 }
@@ -54,6 +54,21 @@ export const fetchUserData = createAsyncThunk<UserProps, void, { rejectValue: st
     }
 );
 
+//create async thunk for logging out user
+
+export const logoutUser = createAsyncThunk<void, void, { rejectValue: string }>(
+    "user/logoutUser",
+    async (_, thunkAPI) => {
+        try {
+            await axios.post("/api/auth/logout", {}, { withCredentials: true });
+        } catch (error: any) {
+            const message =
+                error?.response?.data?.message || "Failed to logout user";
+            return thunkAPI.rejectWithValue(message);
+        }
+    }
+);
+
 const userSlice = createSlice({
     name: "user",
     initialState,
@@ -85,6 +100,20 @@ const userSlice = createSlice({
                 } else {
                     state.fetched = false;
                 }
+            })
+            .addCase(logoutUser.pending, (state) => {
+                state.loading = true;
+                state.isError = false;
+                state.errorMessage = null;
+            })
+            .addCase(logoutUser.fulfilled, (state) => {
+                state.user = null;
+                state.fetched = false;
+            })
+            .addCase(logoutUser.rejected, (state, action) => {
+                state.loading = false;
+                state.isError = true;
+                state.errorMessage = action.payload || "Something went wrong";
             });
     },
 });
