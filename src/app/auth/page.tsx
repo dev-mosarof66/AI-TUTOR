@@ -8,7 +8,6 @@ import {
   loginWithGoogle,
   signupWithEmail,
   signinWithEmail,
-  logout,
 } from "@/helper/auth";
 import axios from "axios";
 
@@ -164,18 +163,6 @@ const AuthForm = () => {
               {activeTab === "signin" ? "Sign in" : "Sign up"}{" "}
               <p className="hidden sm:block">with Google</p>
             </div>
-          </Button>
-        </div>
-
-        {/* Signout Button */}
-        <div className="mt-4">
-          <Button
-            variant="text"
-            color="error"
-            onClick={logout}
-            className="w-full"
-          >
-            Sign Out
           </Button>
         </div>
       </div>

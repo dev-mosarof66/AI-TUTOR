@@ -29,3 +29,13 @@ export const CustomButtonTwo = ({ router, children, className }: Props) => {
   );
 };
 
+export const CustomButtonThree = ({ router, children, className }: Props) => {
+  return (
+    <Link
+      href={router}
+      className={`active:scale-[0.98] ${className} transition duration-300 delay-75`}
+    >
+      {children}
+    </Link>
+  );
+};

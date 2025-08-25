@@ -12,7 +12,7 @@ export const POST = async () => {
 
         const res = NextResponse.json(
             { message: "Logged out successfully", data: null },
-            { status: 200 }
+            { status: 201 }
         );
         res.cookies.set("token", '');
         return res;

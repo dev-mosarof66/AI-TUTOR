@@ -7,10 +7,12 @@ import { FiChevronsRight } from "react-icons/fi";
 import { X } from "lucide-react";
 import { CustomButton } from "./ui/custom-button";
 import { motion } from "motion/react";
+import { useAppSelector } from "@/app/hooks";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = usePathname();
+  const { user } = useAppSelector((state) => state.user);
 
   const navItems = [
     { name: "Home", path: "/" },
@@ -20,6 +22,10 @@ const Navbar = () => {
   ];
 
   const isActive = (path: string) => location === path;
+
+  if (user) {
+    return null;
+  }
 
   return (
     <motion.nav

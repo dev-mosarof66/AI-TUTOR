@@ -53,7 +53,7 @@ const PricingCards = () => {
   const handlePricing = async (plan: any) => {
     setLoadingPlan(true);
     if (!user) {
-      toast.error("Login session expired.", {
+      toast.error("Please login to continue.", {
         position: "top-right",
         duration: 2000,
       });
@@ -131,7 +131,7 @@ const PricingCards = () => {
                   </ul>
                 </div>
                 <div
-                onClick={()=>handlePricing(plan)}
+                  onClick={() => handlePricing(plan)}
                   className={`w-full py-1.5 ${
                     plan.popular
                       ? "bg-purple-600 hover:bg-purple-700 text-white dark:text-gray-900"

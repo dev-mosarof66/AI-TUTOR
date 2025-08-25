@@ -1,12 +1,16 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Button, Tooltip } from "@mui/material";
 import "../../css/sidebar.css";
 import { GoSidebarExpand, GoSidebarCollapse } from "react-icons/go";
 import { LuLogIn, LuArrowBigUpDash } from "react-icons/lu";
 import { useRouter } from "next/navigation";
 import { useAppSelector } from "@/app/hooks";
 import { MdOutlineLogout } from "react-icons/md";
+import { logout } from "@/helper/auth";
+import axios from "axios";
+import toast from "react-hot-toast";
+import Loader from "../loader";
+import { CustomButtonThree } from "../ui/custom-button";
 
 interface SidebarItem {
   id: number;
@@ -30,6 +34,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   const [isOpen, setIsOpen] = useState(true);
   const [activeTab, setActiveTab] = useState(1);
   const { user } = useAppSelector((state) => state.user);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const resizeWindow = () => {
@@ -45,18 +50,45 @@ const Sidebar: React.FC<SidebarProps> = ({
       window.removeEventListener("resize", resizeWindow);
     };
   }, []);
+
+  const handleLogout = async () => {
+    try {
+      setLoading(true);
+      const response = await logout();
+      if (!response) return;
+
+      const res = await axios.post("/api/auth/logout", {
+        withCredentials: true,
+      });
+      if (res.status === 201) {
+        toast.success(res.data.message, { position: "top-right" });
+        router.push("/");
+      }
+    } catch (error) {
+      const status =
+        axios.isAxiosError(error) && error.response
+          ? error.response.status
+          : 500;
+      if (status === 500) {
+        toast.error("Internal server error", { position: "top-right" });
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div
       className={`hidden md:block ${
         isOpen ? "w-64 lg:w-72 xl:w-96" : "w-fit"
-      } h-screen  border-r ${
+      } h-screen border-r ${
         isDarkMode
-          ? "bg-gray-800 text-gray-300 "
-          : "bg-white  text-gray-600 "
-      } border-purple-400 transition-all   backdrop-blur-2xl`}
+          ? "bg-gray-800 text-gray-300 border-r-white/50"
+          : "bg-white text-gray-600 border-r-gray-400/50"
+      } transition-all backdrop-blur-2xl`}
     >
       <div className="w-full h-screen py-6 transition-all duration-200 delay-75 relative">
-        {/* header  */}
+        {/* header */}
         <div className="w-full flex items-center justify-between px-2">
           <h1
             className={`text-xl sm:text-2xl font-semibold text-green-500 ${
@@ -70,7 +102,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             className="block xl:hidden p-2 pl-4 hover:bg-gray-500/20 active:bg-gray-500/20 rounded-full active:ring-1 ring-purple-500 cursor-pointer transition duration-300 delay-75 group"
           >
             {!isOpen ? (
-              <Tooltip title="expand" arrow placement="right">
+              <div className="tooltip tooltip-right" data-tip="Expand">
                 <GoSidebarCollapse
                   size={19}
                   className={`${
@@ -79,9 +111,9 @@ const Sidebar: React.FC<SidebarProps> = ({
                       : "text-gray-600 group-active:text-gray-500"
                   } transform duration-300 delay-75`}
                 />
-              </Tooltip>
+              </div>
             ) : (
-              <Tooltip title="collaps" arrow placement="right">
+              <div className="tooltip tooltip-right" data-tip="Collapse">
                 <GoSidebarExpand
                   size={19}
                   className={`${
@@ -90,112 +122,89 @@ const Sidebar: React.FC<SidebarProps> = ({
                       : "text-gray-600 group-active:text-gray-500"
                   } transform duration-300 delay-75`}
                 />
-              </Tooltip>
+              </div>
             )}
           </div>
         </div>
         <div className="w-full h-[1px] my-4 bg-purple-400/30"></div>
 
-        {/* sidebar items goes here  */}
+        {/* sidebar items */}
         <div className="md:h-[70vh] w-full overflow-y-scroll scrollbar-hidden">
           <div className={`w-full flex flex-col ${isOpen ? "gap-3" : "gap-5"}`}>
             {items.map((Item, index) => (
-              <div key={index}>
-                {!isOpen ? (
-                  <Button
-                    variant="text"
-                    onClick={() => {
-                      setActiveTab(Item.id);
-                      router.push(Item.link);
-                    }}
-                    className={`w-fit flex items-center  px-0 }hover:bg-gray-500/20 active:bg-gray-500/30 active:scale-95 cursor-pointer transition duration-300 delay-75`}
-                  >
-                    <Tooltip title={Item.name} arrow placement="right">
-                      <div
-                        className={`w-full flex items-center justify-center py-1 ${
-                          Item.id === 4
-                            ? "text-amber-400"
-                            : `${
-                                isDarkMode ? "text-green-500" : "text-blue-800"
-                              }`
-                        } ${activeTab === Item.id ? "bg-purple-500/30" : ""}
-                    `}
-                      >
-                        <Item.Icon />
-                      </div>
-                    </Tooltip>
-                  </Button>
-                ) : (
-                  <div
-                    onClick={() => {
-                      setActiveTab(Item.id);
-                      router.push(Item.link);
-                    }}
-                    className={`w-full flex items-center gap-2 py-2 px-4 ${
-                      activeTab === Item.id
-                        ? "bg-purple-500/20 hover:bg-purple-500/40 active:bg-purple-500/50 active:scale-95"
-                        : "hover:bg-purple-500/20 active:bg-purple-500/30 active:scale-95"
-                    }  cursor-pointer transition duration-300 delay-75`}
-                  >
-                    <div
-                      className={`${
-                        Item.id === 4
-                          ? "text-amber-400"
-                          : `${isDarkMode ? "text-green-500" : "text-blue-800"}`
-                      }`}
-                    >
-                      <Item.Icon />
-                    </div>
-                    <p>{Item.name}</p>
+              <div
+                key={index}
+                onClick={() => {
+                  setActiveTab(Item.id);
+                }}
+              >
+                <CustomButtonThree
+                  router={Item.link}
+                  className={`w-full flex items-center gap-2 py-2 px-4 ${
+                    activeTab === Item.id
+                      ? "bg-purple-500/20 hover:bg-purple-500/40 active:bg-purple-500/50 active:scale-95"
+                      : "hover:bg-purple-500/20 active:bg-purple-500/30 active:scale-95"
+                  } cursor-pointer transition duration-300 delay-75`}
+                >
+                  <div className="flex items-center gap-4">
+                    <Item.Icon />
+                    <p className={`${isOpen ? "block" : "hidden"}`}>
+                      {Item.name}
+                    </p>
                   </div>
-                )}
+                </CustomButtonThree>
               </div>
             ))}
           </div>
-          <div className="w-full h-[1px] my-4 bg-purple-400/30"></div>
+          <div className="w-full h-[1px] my-4 bg-gray-600/50"></div>
         </div>
 
-        {/* profile or login  */}
+        {/* footer */}
         <div className="absolute bottom-3 w-full backdrop-blur-3xl">
           <div className="w-full flex flex-col items-center justify-center gap-3">
+            {/* upgrade button */}
             <div className="w-full flex items-center justify-center">
-              <Button
-                onClick={() => router.push("/pricing")}
-                component="label"
-                className={`${isOpen ? "w-[80%]" : "px-2"}`}
-                role={undefined}
-                variant="outlined"
-                tabIndex={-1}
-                startIcon={<LuArrowBigUpDash />}
+              <CustomButtonThree
+                router="/pricing"
+                className={`${
+                  isOpen ? "w-[80%]" : "w-full"
+                } flex items-center justify-center  border border-purple-600 hover:text-purple-500 cursor-pointer transition-colors duration-300 delay-75`}
               >
-                <p className={`${isOpen ? "block" : "hidden"}`}>UPGRADE</p>
-              </Button>
+                <div className="w-full flex items-center justify-center py-2 gap-2">
+                  <LuArrowBigUpDash size={24} />
+                  <p className={`${isOpen ? "block" : "hidden"}`}>Upgrade</p>
+                </div>
+              </CustomButtonThree>
             </div>
+
+            {/* auth */}
             <div className="w-full flex items-center justify-center">
               {user ? (
-                <Button
-                  onClick={() => router.push("/profile")}
-                  component="label"
-                  className={`${isOpen ? "w-[80%]" : "px-2"}`}
-                  role={undefined}
-                  variant="contained"
-                  tabIndex={-1}
-                  startIcon={<MdOutlineLogout size={16} />}
+                <div
+                  onClick={handleLogout}
+                  className={`${
+                    isOpen ? "w-[80%]" : "w-full"
+                  }  mx-auto px-6 py-2  flex items-center justify-center gap-2  border border-purple-600 hover:bg-purple-600 hover:text-white cursor-pointer transition-all duration-300 delay-75`}
                 >
-                  <p className={`${isOpen ? "block" : "hidden"}`}>Logout</p>
-                </Button>
+                  {loading ? (
+                    <Loader />
+                  ) : (
+                    <div className="w-full flex items-center justify-center gap-2">
+                      <MdOutlineLogout size={24} />
+                      <p className={`${isOpen ? "block" : "hidden"}`}>Logout</p>
+                    </div>
+                  )}
+                </div>
               ) : (
-                <Button
+                <div
                   onClick={() => router.push("/auth")}
-                  component="label"
-                  className={`${isOpen ? "w-[80%]" : "px-2"}`}
-                  role={undefined}
-                  variant="contained"
-                  tabIndex={-1}
-                  startIcon={<LuLogIn />}
+                  className={`${
+                    isOpen ? "w-[80%]" : "w-full"
+                  }  mx-auto px-6 py-2  flex items-center justify-center gap-2  border border-purple-600 hover:bg-purple-600 hover:text-white cursor-pointer transition-all duration-300 delay-75`}
                 >
-                  <p className={`${isOpen ? "block" : "hidden"}`}> Join Now</p>
-                </Button>
+                  <LuLogIn />
+                  <p className={`${isOpen ? "block" : "hidden"}`}>Join Now</p>
+                </div>
               )}
             </div>
           </div>

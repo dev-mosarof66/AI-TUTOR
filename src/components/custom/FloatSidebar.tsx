@@ -3,25 +3,19 @@ import React, { useState } from "react";
 import { Button } from "@mui/material";
 import "../../css/sidebar.css";
 import { useRouter } from "next/navigation";
-import { FaBars, FaStar, FaFire, FaUser, FaTimes } from "react-icons/fa";
+import { FaBars, FaTimes, FaStar, FaFire, FaUser } from "react-icons/fa";
 import { MdHome, MdOutlineLogout } from "react-icons/md";
 import { LuArrowBigUpDash, LuLogIn } from "react-icons/lu";
 import { useAppSelector } from "@/app/hooks";
+import { logout } from "@/helper/auth";
+import axios from "axios";
+import toast from "react-hot-toast";
+import Loader from "../loader";
 
 const menuItems = [
   { id: 1, name: "Home", icon: <MdHome size={24} />, link: "/courses" },
-  {
-    id: 2,
-    name: "Popular",
-    icon: <FaStar size={21} />,
-    link: "/courses/popular",
-  },
-  {
-    id: 3,
-    name: "My Courses",
-    icon: <FaFire size={20} />,
-    link: "/courses/my-courses",
-  },
+  { id: 2, name: "Popular", icon: <FaStar size={21} />, link: "/courses/popular" },
+  { id: 3, name: "My Courses", icon: <FaFire size={20} />, link: "/courses/my-courses" },
   { id: 4, name: "Profile", icon: <FaUser size={20} />, link: "/profile" },
 ];
 
@@ -32,11 +26,34 @@ const FloatSidebar = () => {
 
   const [isOpen, setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState(1);
+  const [loading, setLoading] = useState(false);
 
   const handleNavClick = (id: number, link: string) => {
     setActiveTab(id);
     router.push(link);
     setIsOpen(false);
+  };
+
+  const handleLogout = async () => {
+    try {
+      setLoading(true);
+      const response = await logout();
+      if (!response) return;
+
+      const res = await axios.post("/api/auth/logout", {}, { withCredentials: true });
+      if (res.status === 201) {
+        toast.success(res.data.message, { position: "top-right" });
+        router.push("/auth");
+      }
+    } catch (error) {
+      const status =
+        axios.isAxiosError(error) && error.response ? error.response.status : 500;
+      if (status === 500) {
+        toast.error("Internal server error", { position: "top-right" });
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -46,21 +63,13 @@ const FloatSidebar = () => {
         onClick={() => setIsOpen((prev) => !prev)}
         className="p-1 rounded-full text-purple-700 hover:bg-purple-500/20 cursor-pointer transition duration-75"
       >
-        {isOpen ? (
-          <FaTimes
-            size={24}
-          />
-        ) : (
-          <FaBars
-            size={22}
-          />
-        )}
+        {isOpen ? <FaTimes size={24} /> : <FaBars size={22} />}
       </div>
 
       {/* Sidebar content */}
       <div className="w-full fixed backdrop-blur-xl left-0 top-14 z-50">
         <div
-          className={`w-[90%] mx-auto  flex flex-col gap-2 items-center justify-center ${
+          className={`w-[90%] mx-auto flex flex-col gap-2 items-center justify-center ${
             isDarkMode ? "text-gray-300" : "text-gray-600"
           }`}
         >
@@ -96,12 +105,18 @@ const FloatSidebar = () => {
                 {/* Auth button */}
                 {user ? (
                   <Button
-                    onClick={() => router.push("/profile")}
+                    onClick={handleLogout}
                     className="w-[80%]"
                     variant="contained"
-                    startIcon={<MdOutlineLogout size={16} />}
                   >
-                    <p>Logout</p>
+                    {loading ? (
+                      <Loader />
+                    ) : (
+                      <div className="flex items-center gap-2">
+                        <MdOutlineLogout size={16} />
+                        <p>Logout</p>
+                      </div>
+                    )}
                   </Button>
                 ) : (
                   <Button

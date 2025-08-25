@@ -9,7 +9,6 @@ import { changeTheme } from "@/features/theme/themeSlice";
 import Header from "@/components/custom/Header";
 import Search from "@/components/custom/Search";
 import { fetchUserData } from "@/features/user/userSlice";
-import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { getAllPlaylist } from "@/features/playlist/playlists";
 
@@ -18,23 +17,28 @@ interface Type {
 }
 
 const Items = [
-  { id: 1, name: "Home", Icon: () => <MdHome size={24} />, link: "/courses" },
+  {
+    id: 1,
+    name: "Home",
+    Icon: () => <MdHome size={24} className="text-purple-600" />,
+    link: "/courses",
+  },
   {
     id: 2,
     name: "Popular",
-    Icon: () => <FaStar size={21} />,
+    Icon: () => <FaStar size={21} className="text-purple-600" />,
     link: "/courses/popular",
   },
   {
     id: 3,
     name: "My Courses",
-    Icon: () => <FaFire size={20} />,
+    Icon: () => <FaFire size={20} className="text-purple-600" />,
     link: "/courses/my-courses",
   },
   {
     id: 4,
     name: "Profile",
-    Icon: () => <FaUserAlt size={20} />,
+    Icon: () => <FaUserAlt size={20} className="text-amber-400" />,
     link: "/profile",
   },
 ];
@@ -61,9 +65,9 @@ const CourseLayout = ({ children }: Type) => {
   useEffect(() => {
     const isUserNew = localStorage.getItem("isNewUser");
     const parsed = JSON.parse(isUserNew || "true");
-    if (parsed && fetched && !user) {
-      toast.error("Login session expired.");
-      router.push("/auth");
+    console.log("User:", user, "IsNew:", parsed, "Fetched:", fetched);
+    if (!parsed && fetched && !user) {
+      router.push("/");
     }
   }, [user, fetched, router]);
 
