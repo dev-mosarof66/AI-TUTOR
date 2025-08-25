@@ -104,7 +104,6 @@ export const GET = async (req: NextRequest) => {
         }
 
         const user = await User.findById(userId);
-        console.log("user in /auth : ", user)
         if (!user) {
             return NextResponse.json(
                 { message: "Your internet connection is unstable.", data: null },

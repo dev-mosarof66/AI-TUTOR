@@ -90,7 +90,7 @@ const CourseLayout = ({ children }: Type) => {
       <Sidebar items={Items} isDarkMode={isDarkMode} />
       <div className="flex flex-col h-screen w-[95%] mx-auto sm:w-[90%]">
         <Header setSearchMode={setSearchMode} hideSearch={false} />
-        <div className="flex-grow overflow-y-auto pt-10 md:pt-4 scrollbar-hidden">
+        <div className="flex-grow overflow-y-auto md:pt-4 scrollbar-hidden">
           {children}
         </div>
       </div>

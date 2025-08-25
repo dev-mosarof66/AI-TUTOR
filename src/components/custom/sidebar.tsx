@@ -51,9 +51,9 @@ const Sidebar: React.FC<SidebarProps> = ({
         isOpen ? "w-64 lg:w-72 xl:w-96" : "w-fit"
       } h-screen  border-r ${
         isDarkMode
-          ? "bg-gray-700 text-gray-300 border-r-white/50"
-          : "bg-white  text-gray-600 border-r-gray-400/50"
-      } transition-all   backdrop-blur-2xl`}
+          ? "bg-gray-800 text-gray-300 "
+          : "bg-white  text-gray-600 "
+      } border-purple-400 transition-all   backdrop-blur-2xl`}
     >
       <div className="w-full h-screen py-6 transition-all duration-200 delay-75 relative">
         {/* header  */}
@@ -94,7 +94,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             )}
           </div>
         </div>
-        <div className="w-full h-[1px] my-4 bg-gray-600/30"></div>
+        <div className="w-full h-[1px] my-4 bg-purple-400/30"></div>
 
         {/* sidebar items goes here  */}
         <div className="md:h-[70vh] w-full overflow-y-scroll scrollbar-hidden">
@@ -152,7 +152,7 @@ const Sidebar: React.FC<SidebarProps> = ({
               </div>
             ))}
           </div>
-          <div className="w-full h-[1px] my-4 bg-gray-600/50"></div>
+          <div className="w-full h-[1px] my-4 bg-purple-400/30"></div>
         </div>
 
         {/* profile or login  */}

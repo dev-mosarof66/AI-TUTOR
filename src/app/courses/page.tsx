@@ -13,7 +13,7 @@ const Courses = () => {
     >
       <Header />
       {/* divider  */}
-      <div className={`w-full bg-gray-500 h-[1px] my-4`}></div>
+      <div className={`w-full bg-gradient-to-r  via-purple-400  h-[2px] my-4`}></div> 
       {/* courses  */}
       <CourseContent />
     </div>
