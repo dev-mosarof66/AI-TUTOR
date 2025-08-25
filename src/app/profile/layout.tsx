@@ -53,7 +53,7 @@ const CourseLayout = ({ children }: Type) => {
       <Sidebar />
       <BottomTabs logout={logoutPopup} setLogout={setLogoutPopup} />
       <div className="flex flex-col h-screen w-[95%] mx-auto sm:w-[90%]">
-        <Header setSearchMode={setSearchMode} hideSearch={true} />
+        <Header  />
         <div className="flex-grow overflow-y-auto md:pt-4 scrollbar-hidden">
           {children}
         </div>

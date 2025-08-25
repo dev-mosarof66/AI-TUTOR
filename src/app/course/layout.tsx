@@ -21,7 +21,7 @@ const CourseLayout = ({ children }: { children: React.ReactNode }) => {
           : " bg-gray-800 text-stone-100"
       }`}
     >
-      <Header setSearchMode={() => {}} hideSearch={true} />
+      <Header  />
       <div className="w-full h-[89vh] sm:h-[86vh] overflow-y-scroll scrollbar-hidden">{children}</div> 
     </div>
   );
