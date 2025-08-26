@@ -1,53 +1,44 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
-  MdHome,
-  MdEdit,
   MdOutlineLogout,
-  MdSubscriptions,
 } from "react-icons/md";
-import { FaListAlt } from "react-icons/fa";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import { logoutUser } from "@/features/user/userSlice";
 import toast from "react-hot-toast";
 
-const items = [
-  {
-    id: 1,
-    name: "Home",
-    Icon: MdHome,
-    link: "/profile",
-  },
-  {
-    id: 2,
-    name: "Edit Profile",
-    Icon: MdEdit,
-    link: "/profile/edit",
-  },
-  {
-    id: 3,
-    name: "Enrolled",
-    Icon: FaListAlt,
-    link: "/profile/enrolled-courses",
-  },
-  {
-    id: 4,
-    name: "Subscription",
-    Icon: MdSubscriptions,
-    link: "/profile/subscriptions",
-  },
-];
 
-interface Props {
-  logout: boolean;
-  setLogout: (value: boolean) => void;
+interface SidebarItem {
+  id: number;
+  name: string;
+  Icon: React.ElementType;
+  link: string;
 }
 
-const BottomTabs = ({ setLogout }: Props) => {
+interface Props {
+  setLogout: (value: boolean) => void;
+  items: SidebarItem[];
+}
+
+const BottomTabs = ({ setLogout,items }: Props) => {
   const isDarkMode = useAppSelector((state) => state.theme.theme);
   const [activeTab, setActiveTab] = useState(1);
   const router = useRouter();
+  const location = usePathname();
+
+  //useeffect to restore the active tabs
+  useEffect(() => {
+    if (location === "/profile") {
+      setActiveTab(1);
+    } else if (location === "/profile/edit-profile") {
+      setActiveTab(3);
+    } else if (location === "/profile/enrolled-courses") {
+      setActiveTab(2);
+    } else if (location === "/profile/subscriptions") {
+      setActiveTab(4);
+    }
+  }, [location]);
 
   return (
     <div className="fixed bottom-0 left-0 w-full bg-gray-800 text-gray-300 border-t border-t-purple-800 roundet-xl border-gray-600 flex justify-around items-center sm:hidden py-3 z-50">
@@ -58,15 +49,15 @@ const BottomTabs = ({ setLogout }: Props) => {
             setActiveTab(id);
             router.push(link);
           }}
-          className={`flex flex-col items-center justify-center cursor-pointer transition duration-300 ${
+          className={`flex flex-col items-center p-1 justify-center cursor-pointer transition duration-300 ${
             activeTab === id
-              ? "text-purple-500"
+              ? "bg-purple-500/30"
               : isDarkMode
               ? "text-green-500"
               : "text-blue-500"
           }`}
         >
-          <Icon size={22} />
+          <Icon size={id === 1 ? 26 : 22} />
           <span className="text-xs hidden xs:block">{name}</span>
         </div>
       ))}
@@ -94,6 +85,7 @@ export const LogoutPopup = ({
 }) => {
   const dispatch = useAppDispatch();
   const { loading } = useAppSelector((state) => state.user);
+
   const router = useRouter();
   const handleLogout = async () => {
     dispatch(logoutUser());

@@ -22,7 +22,7 @@ const plans = [
   },
   {
     name: "Basic",
-    price: "9",
+    price: "29",
     popular: true,
     features: [
       { text: "Access to 50 modules", included: true },
@@ -34,7 +34,7 @@ const plans = [
   },
   {
     name: "Premium",
-    price: "19",
+    price: "39",
     features: [
       { text: "Unlimited modules", included: true },
       { text: "Priority support", included: true },
@@ -49,6 +49,7 @@ const PricingCards = () => {
   const router = useRouter();
   const [loadingPlan, setLoadingPlan] = useState<boolean | null>(null);
   const { user } = useAppSelector((state) => state.user);
+  const isDarkMode = useAppSelector((state) => state.theme.theme);
 
   const handlePricing = async (plan: any) => {
     setLoadingPlan(true);
@@ -96,11 +97,12 @@ const PricingCards = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, ease: "easeOut" }}
                 viewport={{ once: true }}
-                className={`w-full bg-gray-100 ${
-                  plan.popular
-                    ? "scale-100"
-                    : "border border-gray-700 dark:border-none"
-                } flex flex-col justify-between dark:bg-gray-800 rounded-2xl shadow-xl dark:shadow-purple-500/10 text-gray-700 dark:text-gray-400  p-6 relative`}
+                className={`w-full  ${
+                  isDarkMode
+                    ? "border-none bg-gray-800 text-gray-400 shadow-purple-500/10"
+                    : "border border-gray-700 text-gray-700 bg-gray-100"
+                }
+                 flex flex-col justify-between rounded-2xl shadow-xl p-6 relative`}
               >
                 {plan.popular && (
                   <div className="absolute scale-[1.01] -top-4 left-1/2 -translate-x-1/2 bg-green-800 text-white px-3 py-1 rounded-full text-sm flex items-center gap-1 shadow-md">
@@ -152,7 +154,7 @@ const PricingCards = () => {
                 transition={{ duration: 0.6, ease: "easeOut" }}
                 viewport={{ once: true }}
                 key={index}
-                className="p-[1.5px] rounded-2xl animated-gradient"
+                className={`p-[2px] rounded-2xl animated-gradient`}
               >
                 {cardContent}
               </motion.div>

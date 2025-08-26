@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import "../../css/sidebar.css";
 import { GoSidebarExpand, GoSidebarCollapse } from "react-icons/go";
 import { LuLogIn, LuArrowBigUpDash } from "react-icons/lu";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useAppSelector } from "@/app/hooks";
 import { MdOutlineLogout } from "react-icons/md";
 import { logout } from "@/helper/auth";
@@ -31,6 +31,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   isDarkMode,
 }) => {
   const router = useRouter();
+  const location = usePathname();
   const [isOpen, setIsOpen] = useState(true);
   const [activeTab, setActiveTab] = useState(1);
   const { user } = useAppSelector((state) => state.user);
@@ -50,6 +51,18 @@ const Sidebar: React.FC<SidebarProps> = ({
       window.removeEventListener("resize", resizeWindow);
     };
   }, []);
+
+  //useeffect to retrieve the active tabs
+
+  useEffect(() => {
+    if (location === "/courses") {
+      setActiveTab(1);
+    } else if (location === "/courses/popular") {
+      setActiveTab(2);
+    } else if (location === "/courses/my-courses") {
+      setActiveTab(3);
+    }
+  }, [location]);
 
   const handleLogout = async () => {
     try {

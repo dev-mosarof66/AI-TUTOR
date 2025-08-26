@@ -7,13 +7,21 @@ import FloatSidebar from "./FloatSidebar";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 
-
 const CourseHeader = () => {
   const theme = useAppSelector((state) => state.theme.theme);
   const dispatch = useAppDispatch();
   const location = usePathname();
 
-  const isProfile = location === "/profile" ? true : false;
+  const isProfile =
+    location === "/profile"
+      ? true
+      : location === "/profile/edit-profile"
+      ? true
+      : location === "/profile/enrolled-courses"
+      ? true
+      : location === "/profile/subscriptions"
+      ? true
+      : false;
 
   const handleTheme = () => {
     dispatch(changeTheme(!theme));
@@ -27,7 +35,7 @@ const CourseHeader = () => {
           <FloatSidebar />
         ) : (
           <Link href="/courses" className="flex items-center space-x-2 group">
-            <span className="text-xl  font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+            <span className="block sm:hidden text-xl  font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
               Neura
             </span>
           </Link>

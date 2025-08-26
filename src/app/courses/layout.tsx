@@ -75,7 +75,7 @@ const CourseLayout = ({ children }: Type) => {
   return (
     <div
       className={`w-full h-screen flex ${
-        isDarkMode ? "bg-gray-800" : "bg-stone-100"
+        isDarkMode ? "bg-gray-800" : "bg-white"
       }`}
     >
       <Sidebar items={Items} isDarkMode={isDarkMode} />

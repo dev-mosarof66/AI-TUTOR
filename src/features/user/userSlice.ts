@@ -10,7 +10,10 @@ interface PlanProps {
 export interface UserProps {
     _id: string;
     email: string;
+    github:string;
+    school:string;
     name: string;
+    fullname: string;
     avatar: string;
     currentPlan: string | null;
     enrolledCourses: Playlist[] | [];

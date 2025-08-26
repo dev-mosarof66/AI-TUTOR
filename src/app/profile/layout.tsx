@@ -10,10 +10,39 @@ import { fetchUserData } from "@/features/user/userSlice";
 import { useRouter } from "next/navigation";
 import { getAllPlaylist } from "@/features/playlist/playlists";
 import BottomTabs, { LogoutPopup } from "@/components/profile/bottom-tabs";
+import { MdHome, MdEdit, MdSubscriptions } from "react-icons/md";
+import { FaListAlt } from "react-icons/fa";
 
 interface Type {
   children: React.ReactNode;
 }
+
+const items = [
+  {
+    id: 1,
+    name: "Home",
+    Icon: () => <MdHome size={24} className="text-purple-600" />,
+    link: "/profile",
+  },
+  {
+    id: 2,
+    name: "Enrolled Courses",
+    Icon: () => <FaListAlt size={20} className="text-purple-400" />,
+    link: "/profile/enrolled-courses",
+  },
+  {
+    id: 3,
+    name: "Edit Profile",
+    Icon: () => <MdEdit size={21} className="text-purple-400" />,
+    link: "/profile/edit-profile",
+  },
+  {
+    id: 4,
+    name: "Subscriptions",
+    Icon: () => <MdSubscriptions size={20} className="text-amber-400" />,
+    link: "/profile/subscriptions",
+  },
+];
 
 const CourseLayout = ({ children }: Type) => {
   const router = useRouter();
@@ -50,10 +79,10 @@ const CourseLayout = ({ children }: Type) => {
         isDarkMode ? "bg-gray-800" : "bg-stone-100"
       }`}
     >
-      <Sidebar />
-      <BottomTabs logout={logoutPopup} setLogout={setLogoutPopup} />
+      <Sidebar title="Neura" isDarkMode={isDarkMode} items={items} />
+      <BottomTabs setLogout={setLogoutPopup} items={items} />
       <div className="flex flex-col h-screen w-[95%] mx-auto sm:w-[90%]">
-        <Header  />
+        <Header />
         <div className="flex-grow overflow-y-auto md:pt-4 scrollbar-hidden">
           {children}
         </div>

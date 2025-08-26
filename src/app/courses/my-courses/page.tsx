@@ -8,10 +8,13 @@ import { FaSearch } from "react-icons/fa";
 const MyCourses = () => {
   const router = useRouter();
   const { user } = useAppSelector((state) => state.user);
+  const isDarkMode = useAppSelector((state) => state.theme.theme);
   console.log(user?.enrolledCourses);
 
   return (
-    <div className="w-[96%] mx-auto">
+    <div
+      className={`w-[96%] mx-auto`}
+    >
       {(user?.enrolledCourses?.length ?? 0) > 0 ? (
         <div className="w-full my-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {user?.enrolledCourses.map((course) => {
@@ -31,12 +34,12 @@ const MyCourses = () => {
         </div>
       ) : (
         <div className="w-full flex flex-col justify-center items-center gap-6 py-10">
-          <h2 className="text-purple-500/30 text-base sm:text-xl">
+          <h2 className={`${isDarkMode?'text-purple-500/30':'text-gray-800/50'} text-base sm:text-xl`}>
             You did not enroll in any courses yet.
           </h2>
           <button
             onClick={() => router.push("/courses")}
-            className="flex items-center gap-2 border border-purple-600 hover:bg-purple-600 active:scale-[0.97] text-white font-semibold px-6 py-2 cursor-pointer transition-all duration-200 delay-75"
+            className={`flex items-center gap-2 ${isDarkMode?'text-gray-300 hover:text-gray-700':'text-gray-600 hover:text-gray-300'} border border-purple-600 hover:bg-purple-600 active:scale-[0.95] font-semibold px-6 py-2 cursor-pointer transition-all duration-200 delay-75`}
           >
             <FaSearch />
             Explore
