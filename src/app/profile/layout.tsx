@@ -67,7 +67,6 @@ const CourseLayout = ({ children }: Type) => {
   useEffect(() => {
     const isUserNew = localStorage.getItem("isNewUser");
     const parsed = JSON.parse(isUserNew || "true");
-    console.log("User:", user, "IsNew:", parsed, "Fetched:", fetched);
     if (!parsed && fetched && !user) {
       router.push("/");
     }
@@ -75,18 +74,18 @@ const CourseLayout = ({ children }: Type) => {
 
   return (
     <div
-      className={`w-full h-screen flex ${
+      className={`w-full h-screen flex flex-col sm:flex sm:flex-row justify-between ${
         isDarkMode ? "bg-gray-800" : "bg-stone-100"
       }`}
     >
       <Sidebar title="Neura" isDarkMode={isDarkMode} items={items} />
-      <BottomTabs setLogout={setLogoutPopup} items={items} />
-      <div className="flex flex-col h-screen w-[95%] mx-auto sm:w-[90%]">
+      <div className="flex flex-col h-[90vh] w-[98%]  mx-auto sm:w-[90%]">
         <Header />
         <div className="flex-grow overflow-y-auto md:pt-4 scrollbar-hidden">
           {children}
         </div>
       </div>
+      <BottomTabs setLogout={setLogoutPopup} items={items} />
       {searchMode && (
         <Search setSearchMode={setSearchMode} isDarkMode={isDarkMode} />
       )}

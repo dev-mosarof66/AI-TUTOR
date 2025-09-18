@@ -7,18 +7,10 @@ const Hero = () => {
   return (
     <section className="relative min-h-screen pt-24 flex items-center justify-center overflow-hidden bg-gray-300 dark:bg-gray-900 text-gray-900 dark:text-gray-300">
       {/* Background Effects */}
-      <motion.div
-        initial={{ scale: 0.8, opacity: 0 }}
-        animate={{ scale: 1, opacity: 0.2 }}
-        transition={{ duration: 2, repeat: Infinity, repeatType: "mirror" }}
-        className="absolute top-20 left-10 w-48 h-48 bg-purple-600/70 rounded-full blur-3xl"
-      />
-      <motion.div
-        initial={{ scale: 0.8, opacity: 0 }}
-        animate={{ scale: 1, opacity: 0.1 }}
-        transition={{ duration: 2, repeat: Infinity, repeatType: "mirror", delay: 1 }}
-        className="absolute bottom-20 right-10 w-48 h-48 bg-purple-600/70 rounded-full blur-3xl"
-      />
+
+      
+      <div  className="absolute top-20 left-96 translate-x-1/2 w-48 h-48 bg-purple-800/30 rounded-full blur-3xl"/>
+      <div  className="absolute bottom-20 right-10 -translate-x-1/2 w-48 h-48 bg-purple-800/40 rounded-full blur-3xl"/>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <div className="space-y-8">
@@ -74,7 +66,7 @@ const Hero = () => {
             transition={{ duration: 0.8, delay: 0.6 }}
             className="w-full max-w-lg mx-auto flex flex-col sm:flex-row gap-4 justify-center items-center"
           >
-            <button className="w-full sm:w-fit border border-purple-600 text-white hover:bg-purple-600 font-semibold px-6 py-2 active:scale-[0.97] cursor-pointer transition-all duration-300 delay-75 flex items-center justify-center gap-2 group">
+            <button className="w-full sm:w-fit border border-purple-600 text-white hover:bg-purple-700 font-semibold px-6 py-2 active:scale-[0.97] cursor-pointer transition-all duration-300 delay-75 flex items-center justify-center gap-2 group">
               <Play className="h-5 w-5 group-hover:scale-110  transition-all duration-300" />
               Start Learning
             </button>

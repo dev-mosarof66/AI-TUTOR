@@ -11,7 +11,6 @@ const Home = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const {  user } = useAppSelector((state) => state.user);
-  console.log("home", user);
 
   useEffect(() => {
     dispatch(fetchUserData());

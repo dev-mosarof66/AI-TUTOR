@@ -98,9 +98,9 @@ const Sidebar: React.FC<SidebarProps> = ({
         isDarkMode
           ? "bg-gray-800 text-gray-300 border-r-white/50"
           : "bg-white text-gray-600 border-r-gray-400/50"
-      } transition-all backdrop-blur-2xl`}
+      }  backdrop-blur-2xl`}
     >
-      <div className="w-full h-screen py-6 transition-all duration-200 delay-75 relative">
+      <div className="w-full h-screen py-6  relative">
         {/* header */}
         <div className="w-full flex items-center justify-between px-2">
           <h1

@@ -41,7 +41,7 @@ const BottomTabs = ({ setLogout,items }: Props) => {
   }, [location]);
 
   return (
-    <div className="fixed bottom-0 left-0 w-full bg-gray-800 text-gray-300 border-t border-t-purple-800 roundet-xl border-gray-600 flex justify-around items-center sm:hidden py-3 z-50">
+    <div className="w-full bg-gray-800 text-gray-300 border-t border-t-purple-800 roundet-xl border-gray-600 flex justify-around items-center sm:hidden py-3 z-50">
       {items.map(({ id, name, Icon, link }) => (
         <div
           key={id}

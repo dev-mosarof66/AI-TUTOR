@@ -2,9 +2,10 @@
 import React from "react";
 import { useAppSelector } from "@/app/hooks";
 import "../../css/sidebar.css";
-import {Playlist} from '@/features/playlist/playlists'
-import { FaHourglassStart, FaPlaystation, FaSquare } from "react-icons/fa";
+import { Playlist } from "@/features/playlist/playlists";
+import { FaHourglassStart, FaSquare } from "react-icons/fa";
 import { BsFillTriangleFill } from "react-icons/bs";
+import { FaPlay } from "react-icons/fa6";
 import { MdOutlineDiscount } from "react-icons/md";
 import { useRouter } from "next/navigation";
 
@@ -26,7 +27,7 @@ const CourseCard = ({ course, hours, minutes, link }: Props) => {
   return (
     <article
       key={course._id}
-      className={`w-full flex flex-col justify-between ${cardBg} p-5 rounded-xl shadow-md hover:scale-[1.01] active:ring active:ring-green-500 transition-all cursor-pointer duration-200`}
+      className={`w-full flex flex-col justify-between ${cardBg} p-5 rounded-xl shadow-md hover:scale-[1.01] transition-all cursor-pointer duration-200 delay-75`}
     >
       <div className="flex flex-col gap-2">
         <h1 className={`text-xl font-semibold ${textColor}`}>{course.title}</h1>
@@ -70,10 +71,10 @@ const CourseCard = ({ course, hours, minutes, link }: Props) => {
         {/* Start Button */}
         <button
           onClick={() => router.push(link)}
-          className="flex items-center gap-2 px-4 py-2 border border-purple-600 text-purple-700 rounded hover:bg-purple-600 hover:text-white active:scale-95 cursor-pointer transition-all duration-200"
+          className="flex items-center gap-2 px-3 py-2 border border-purple-600 text-purple-700 rounded hover:bg-purple-600 hover:text-white active:scale-95 cursor-pointer transition duration-200 delay-100"
         >
-          <FaPlaystation className="text-green-400" size={18} />
-          Start
+          <FaPlay className="text-green-400" size={16} />
+          <span className="hidden md:block">Play</span>
         </button>
       </div>
     </article>
